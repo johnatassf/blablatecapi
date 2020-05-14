@@ -1,7 +1,0 @@
-C:\Users\T2S-JOHNATAS\Documents\projetos-demo\Blablatec\Blablatec.Domain\bin\Debug\netcoreapp3.0\Blablatec.Domain.deps.json
-C:\Users\T2S-JOHNATAS\Documents\projetos-demo\Blablatec\Blablatec.Domain\bin\Debug\netcoreapp3.0\Blablatec.Domain.dll
-C:\Users\T2S-JOHNATAS\Documents\projetos-demo\Blablatec\Blablatec.Domain\bin\Debug\netcoreapp3.0\Blablatec.Domain.pdb
-C:\Users\T2S-JOHNATAS\Documents\projetos-demo\Blablatec\Blablatec.Domain\obj\Debug\netcoreapp3.0\Blablatec.Domain.AssemblyInfoInputs.cache
-C:\Users\T2S-JOHNATAS\Documents\projetos-demo\Blablatec\Blablatec.Domain\obj\Debug\netcoreapp3.0\Blablatec.Domain.AssemblyInfo.cs
-C:\Users\T2S-JOHNATAS\Documents\projetos-demo\Blablatec\Blablatec.Domain\obj\Debug\netcoreapp3.0\Blablatec.Domain.dll
-C:\Users\T2S-JOHNATAS\Documents\projetos-demo\Blablatec\Blablatec.Domain\obj\Debug\netcoreapp3.0\Blablatec.Domain.pdb
