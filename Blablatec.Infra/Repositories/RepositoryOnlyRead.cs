@@ -16,6 +16,12 @@ namespace Blablatec.Infra.Repositories
         {
             _dbSet = contextBlablatec.Set<T>();
         }
+
+        public bool Exists(int id)
+        {
+            return _dbSet.AsNoTracking().Any(t => t.Id == id);
+        }
+
         public List<T> GetAll()
         {
             return _dbSet.ToList();

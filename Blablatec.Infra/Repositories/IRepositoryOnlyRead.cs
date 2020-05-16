@@ -16,5 +16,7 @@ namespace Blablatec.Infra.Repositories
 
         List<T> GetAll(Expression<Func<T, bool>> expression);
 
+        bool Exists(int id);
+
     }
 }
