@@ -11,6 +11,6 @@ namespace Blablatec.Infra.Repositories
 
         T Save(T entity);
 
-        void Update(T entity);
+        T Update(T entity);
     }
 }

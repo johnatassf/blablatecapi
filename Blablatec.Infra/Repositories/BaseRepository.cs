@@ -35,11 +35,13 @@ namespace Blablatec.Infra.Repositories
             return entity;
         }
 
-        public void Update(T entity)
+        public T Update(T entity)
         {
             _dbSet.Attach(entity);
             _contextBlablatec.Entry(entity).State = EntityState.Modified;
             _contextBlablatec.SaveChanges();
+            
+            return entity;
         }
     }
 }

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Blablatec.Domain.Model
 {
+    [Table("Usuario")]
     public class Usuario: IEntity
     {
         public int Id { get; set; }
