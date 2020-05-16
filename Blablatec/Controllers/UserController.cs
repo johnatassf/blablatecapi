@@ -17,20 +17,22 @@ namespace Blablatec.Controllers
     {
 
         private readonly ILogger<UserController> _logger;
+        private readonly IRepository<Usuario> _repositoryUser;
         private readonly ContextBlablatec _contextBlablatec;
 
-        public UserController(ILogger<UserController> logger, ContextBlablatec contextBlablatec)
+        public UserController(ILogger<UserController> logger, 
+            IRepository<Usuario> repositoryUser)
         {
             _logger = logger;
-            _contextBlablatec = contextBlablatec;
+            _repositoryUser = repositoryUser;
         }
 
         [HttpGet]
         public IActionResult GetAll()
         {
-            IRepository<Usuario> repositoryUser = new BaseRepository<Usuario>(_contextBlablatec);
+            var usuarios =_repositoryUser.GetAll();
             
-            return Ok(repositoryUser.GetAll());
+            return Ok(usuarios);
         }
 
     }
