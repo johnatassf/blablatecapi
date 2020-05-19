@@ -1,6 +1,7 @@
 ﻿using Blablatec.Domain.Model;
 using Blablatec.Infra;
 using Blablatec.Infra.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -28,6 +29,7 @@ namespace Blablatec.Controllers
             _repositoryUser = repositoryUser;
         }
 
+        [Authorize]
         [HttpGet]
         public IActionResult GetAll()
         {

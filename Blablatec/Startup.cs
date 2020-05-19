@@ -2,10 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
 using Blablatec.Infra;
+using Blablatec.Infra.Authorize;
 using Blablatec.Infra.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -16,6 +20,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
 namespace Blablatec
@@ -54,6 +59,37 @@ namespace Blablatec
                     c.IncludeXmlComments(nomeArquivo);
 
             });
+
+            var siginingConfiguration = new SigningConfiguration();
+            services.AddSingleton(siginingConfiguration);
+
+
+            var token = new TokenConfiguration();
+            new ConfigureFromConfigurationOptions<TokenConfiguration>(Configuration.GetSection(typeof(TokenConfiguration).Name)).Configure(token);
+            services.AddSingleton(token);
+
+            services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(opt =>
+            {
+                opt.TokenValidationParameters.IssuerSigningKey = siginingConfiguration.Key;
+                opt.TokenValidationParameters.ValidAudience = token.ValidAudience; // dynamic
+                opt.TokenValidationParameters.ValidIssuer = token.ValidIssuer;  // dynamic
+                opt.TokenValidationParameters.ValidateIssuerSigningKey = token.ValidateIssuerSigningKey;  // dynamic
+                opt.TokenValidationParameters.ValidateLifetime = token.ValidateLifetime;  // dynamic
+                opt.TokenValidationParameters.ClockSkew = TimeSpan.Zero;
+            });
+
+            services.AddAuthorization(auth =>
+            {
+                auth.AddPolicy(TokenConfiguration.Policy, new AuthorizationPolicyBuilder()
+                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                    .RequireAuthenticatedUser().Build());
+            });
+
+
             services.AddScoped<ContextBlablatec>();
 
             services.AddOptions();
@@ -67,8 +103,16 @@ namespace Blablatec
         // Don't build the container; that gets done for you by the factory.
         public void ConfigureContainer(ContainerBuilder builder)
         {
+
+            var dataAccess = Assembly.GetExecutingAssembly();
+
+            builder.RegisterAssemblyTypes(dataAccess)
+                   .Where(t => t.Name.StartsWith("Repository")
+                   || t.Name.StartsWith("Service"))
+                   .AsImplementedInterfaces();
             // Register your own things directly with Autofac, like:
             builder.RegisterGeneric(typeof(BaseRepository<>)).As(typeof(IRepository<>));
+            builder.RegisterType<JwtIdentityAuthentication>().As<IAuthentication>();
         }
 
 
@@ -97,6 +141,7 @@ namespace Blablatec
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {
