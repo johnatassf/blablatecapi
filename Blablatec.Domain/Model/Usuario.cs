@@ -20,11 +20,13 @@ namespace Blablatec.Domain.Model
         public string Sobrenome { get; set; }
         [Column("cd_ra_usuario")]
         public string Ra { get; set; }
-        [NotMapped]
+      
         [JsonIgnore]
+        [Column("cd_passwordhash")]
         public byte[] Passwordhash { get; set; }
-        [NotMapped]
+       
         [JsonIgnore]
+        [Column("cd_passwordsalt")]
         public byte[] Passwordsalt { get; set; }
     }
 }
