@@ -1,10 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using Autofac;
+using AutoMapper;
 using Blablatec.Infra;
 using Blablatec.Infra.Authorize;
 using Blablatec.Infra.Repositories;
@@ -12,14 +11,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
@@ -91,9 +86,9 @@ namespace Blablatec
 
 
             services.AddScoped<ContextBlablatec>();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies().ToArray());
 
             services.AddOptions();
-
 
         }
 
@@ -113,6 +108,7 @@ namespace Blablatec
             // Register your own things directly with Autofac, like:
             builder.RegisterGeneric(typeof(BaseRepository<>)).As(typeof(IRepository<>));
             builder.RegisterType<JwtIdentityAuthentication>().As<IAuthentication>();
+            builder.RegisterType<RepositoryUserManage>().As<IRepositoryUserManage>();
         }
 
 
@@ -126,7 +122,7 @@ namespace Blablatec
             {
                 app.UseDeveloperExceptionPage();
             }
-             app.UseSwagger(c => { c.RouteTemplate = "api-docs/{documentName}/swagger.json"; });
+            app.UseSwagger(c => { c.RouteTemplate = "api-docs/{documentName}/swagger.json"; });
 
             app.UseSwaggerUI(c =>
             {
@@ -151,6 +147,6 @@ namespace Blablatec
 
         }
 
-      
+
     }
 }

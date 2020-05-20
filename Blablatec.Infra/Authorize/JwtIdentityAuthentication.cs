@@ -23,11 +23,11 @@ namespace Blablatec.Infra.Authorize
             var claims = new List<Claim>
         {
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
-            new Claim(JwtRegisteredClaimNames.UniqueName, user.Id),
+            new Claim(JwtRegisteredClaimNames.UniqueName, user.Ra),
             new Claim("Data", ToJson(user))
         };
 
-            var identity = new ClaimsIdentity(new GenericIdentity(user.Id, "Login"), claims);
+            var identity = new ClaimsIdentity(new GenericIdentity(user.Ra, "Login"), claims);
 
             var created = DateTime.UtcNow;
             var expiration = created + TimeSpan.FromSeconds(60000);
