@@ -2,6 +2,7 @@
 using Blablatec.Infra;
 using Blablatec.Infra.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -12,7 +13,6 @@ using System.Threading.Tasks;
 
 namespace Blablatec.Controllers
 {
-
     [ApiController]
     [Route("user")]
     public class UserController : ControllerBase

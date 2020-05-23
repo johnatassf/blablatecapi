@@ -44,7 +44,7 @@ namespace Blablatec.Infra.Repositories
 
         public bool Authorize(LoginUser loginUser)
         {
-            var user = GetAll(u => u.Ra == loginUser.Ra).First();
+            var user = GetAll(u => u.Ra == loginUser.Ra).FirstOrDefault();
             if (user == null)
                 return false;
 
