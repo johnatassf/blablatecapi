@@ -7,6 +7,7 @@ using AutoMapper;
 using Blablatec.Infra;
 using Blablatec.Infra.Authorize;
 using Blablatec.Infra.Repositories;
+using Blablatec.Infra.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -87,7 +88,6 @@ namespace Blablatec
 
             services.AddScoped<ContextBlablatec>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies().ToArray());
-
             services.AddOptions();
 
         }
@@ -99,16 +99,20 @@ namespace Blablatec
         public void ConfigureContainer(ContainerBuilder builder)
         {
 
+
             var dataAccess = Assembly.GetExecutingAssembly();
 
             builder.RegisterAssemblyTypes(dataAccess)
                    .Where(t => t.Name.StartsWith("Repository")
                    || t.Name.StartsWith("Service"))
                    .AsImplementedInterfaces();
+            // Register your own things
             // Register your own things directly with Autofac, like:
             builder.RegisterGeneric(typeof(BaseRepository<>)).As(typeof(IRepository<>));
             builder.RegisterType<JwtIdentityAuthentication>().As<IAuthentication>();
             builder.RegisterType<RepositoryUserManage>().As<IRepositoryUserManage>();
+            builder.RegisterType<ServiceEmail>().As<IServiceEmail>();
+
         }
 
 

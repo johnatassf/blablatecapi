@@ -17,15 +17,18 @@ namespace Blablatec.Controllers
     {
         private readonly IAuthentication _serviceAuthentication;
         private readonly IRepositoryUserManage _repositoryUserManage;
+        private readonly IRepository<Usuario> _repositoryUsuario;
 
         //private readonly IServiceAuthorization _serviceAuthorization;
 
         public AuthorizeController(
             IAuthentication serviceAuthentication,
-            IRepositoryUserManage repositoryUserManage )
+            IRepositoryUserManage repositoryUserManage,
+            IRepository<Usuario> repositoryUsuario)
         {
             _serviceAuthentication = serviceAuthentication;
             _repositoryUserManage = repositoryUserManage;
+            _repositoryUsuario = repositoryUsuario;
             //_serviceAuthorization = serviceAuthorization;
         }
 
@@ -60,6 +63,20 @@ namespace Blablatec.Controllers
             var userCreated = _repositoryUserManage.RegisterUser(user);
 
             return Created("", userCreated);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassWord(string ra, string email)
+        {
+           var user = await _repositoryUsuario.GetOne(u => u.Ra == ra && u.Email == email);
+            
+            if (user == null)
+                return BadRequest("Ra\\Email não cadatrado");
+
+            await  _repositoryUserManage.UpdatePassword(user);
+
+            return NoContent();
         }
 
 

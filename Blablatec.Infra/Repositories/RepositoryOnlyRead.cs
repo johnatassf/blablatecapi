@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Blablatec.Infra.Repositories
 {
@@ -29,6 +30,10 @@ namespace Blablatec.Infra.Repositories
         public List<T> GetAll(Expression<Func<T, bool>> expression)
         {
             return _dbSet.Where(expression).ToList();
+        }
+        public async Task<T> GetOne(Expression<Func<T, bool>> expression)
+        {
+            return await _dbSet.FirstAsync(expression);
         }
 
         public T GetById(int id, params Expression<Func<T, object>>[] includes)

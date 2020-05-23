@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Blablatec.Infra.Repositories
 {
@@ -15,6 +16,8 @@ namespace Blablatec.Infra.Repositories
         List<T> GetAll();
 
         List<T> GetAll(Expression<Func<T, bool>> expression);
+
+        Task<T> GetOne(Expression<Func<T, bool>> expression);
 
         bool Exists(int id);
 
