@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,15 +12,21 @@ namespace Blablatec.Infra.Authorize
 {
     public class JwtIdentityAuthentication : IAuthentication
     {
-        private readonly SigningConfiguration _signingConfiguration;
+        private readonly IConfiguration _configuration;
 
-        public JwtIdentityAuthentication(SigningConfiguration signingConfiguration)
+        public JwtIdentityAuthentication(IConfiguration configuration)
         {
-            _signingConfiguration = signingConfiguration;
+            _configuration = configuration;
         }
 
         public AuthenticationResult Authenticate(IUser user)
         {
+
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_configuration["Security:Key"]);
+
+
             var claims = new List<Claim>
         {
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
@@ -27,28 +34,30 @@ namespace Blablatec.Infra.Authorize
             new Claim("Data", ToJson(user))
         };
 
-            var identity = new ClaimsIdentity(new GenericIdentity(user.Ra, "Login"), claims);
+            var notBefore = DateTime.UtcNow;
+            var expires = DateTime.UtcNow + TimeSpan.FromSeconds(60000);
 
-            var created = DateTime.UtcNow;
-            var expiration = created + TimeSpan.FromSeconds(60000);
-            var handler = new JwtSecurityTokenHandler();
-            var securityToken = handler.CreateToken(new SecurityTokenDescriptor
+            var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Issuer = "FSL",
-                Audience = "FSL",
-                SigningCredentials = _signingConfiguration.SigningCredentials,
-                Subject = identity,
-                NotBefore = created,
-                Expires = expiration
-            });
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, user.Ra.ToString()),
+                    new Claim(ClaimTypes.Role, "Login")
+                }),
+                NotBefore = notBefore,
+                Expires = expires,
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            
+            var token = tokenHandler.CreateToken(tokenDescriptor);
 
             var result = new AuthenticationResult
             {
                 Success = true,
                 Authenticated = true,
-                Created = created.ToString("yyyy-MM-dd HH:mm:ss"),
-                Expiration = expiration.ToString("yyyy-MM-dd HH:mm:ss"),
-                AccessToken = handler.WriteToken(securityToken),
+                Created = notBefore.ToString("yyyy-MM-dd HH:mm:ss"),
+                Expiration = expires.ToString("yyyy-MM-dd HH:mm:ss"),
+                AccessToken = tokenHandler.WriteToken(token),
                 Message = "OK"
             };
 

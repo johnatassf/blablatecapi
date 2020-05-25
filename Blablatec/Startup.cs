@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using Autofac;
 using AutoMapper;
 using Blablatec.Infra;
@@ -17,6 +18,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 namespace Blablatec
@@ -28,21 +30,12 @@ namespace Blablatec
             Configuration = configuration;
         }
 
-        //public Startup(IHostingEnvironment env)
-        //{
-        //    // In ASP.NET Core 3.0 `env` will be an IWebHostEnvironment, not IHostingEnvironment.
-        //    var builder = new ConfigurationBuilder()
-        //        .SetBasePath(env.ContentRootPath)
-        //        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-        //        .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-        //        .AddEnvironmentVariables();
-        //    this.Configuration = builder.Build();
-        //}
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
@@ -56,39 +49,30 @@ namespace Blablatec
 
             });
 
-            var siginingConfiguration = new SigningConfiguration();
-            services.AddSingleton(siginingConfiguration);
 
-
-            var token = new TokenConfiguration();
-            new ConfigureFromConfigurationOptions<TokenConfiguration>(Configuration.GetSection(typeof(TokenConfiguration).Name)).Configure(token);
-            services.AddSingleton(token);
-
-            services.AddAuthentication(opt =>
+            var key = Encoding.ASCII.GetBytes(Configuration["Security:Key"]);
+            services.AddAuthentication(x =>
             {
-                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(opt =>
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
             {
-                opt.TokenValidationParameters.IssuerSigningKey = siginingConfiguration.Key;
-                opt.TokenValidationParameters.ValidAudience = token.ValidAudience; // dynamic
-                opt.TokenValidationParameters.ValidIssuer = token.ValidIssuer;  // dynamic
-                opt.TokenValidationParameters.ValidateIssuerSigningKey = token.ValidateIssuerSigningKey;  // dynamic
-                opt.TokenValidationParameters.ValidateLifetime = token.ValidateLifetime;  // dynamic
-                opt.TokenValidationParameters.ClockSkew = TimeSpan.Zero;
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
             });
-
-            services.AddAuthorization(auth =>
-            {
-                auth.AddPolicy(TokenConfiguration.Policy, new AuthorizationPolicyBuilder()
-                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-                    .RequireAuthenticatedUser().Build());
-            });
-
 
             services.AddScoped<ContextBlablatec>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies().ToArray());
             services.AddOptions();
+            services.AddScoped<IConfiguration>(c => Configuration);
 
         }
 
@@ -98,8 +82,6 @@ namespace Blablatec
         // Don't build the container; that gets done for you by the factory.
         public void ConfigureContainer(ContainerBuilder builder)
         {
-
-
             var dataAccess = Assembly.GetExecutingAssembly();
 
             builder.RegisterAssemblyTypes(dataAccess)
@@ -116,22 +98,27 @@ namespace Blablatec
         }
 
 
-
-
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseCors(builder => {
-                builder.AllowAnyOrigin();
-                builder.AllowAnyMethod();
-                builder.AllowAnyHeader();
-            });
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseHttpsRedirection();
+
+            app.UseRouting();
+
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+
             app.UseSwagger(c => { c.RouteTemplate = "api-docs/{documentName}/swagger.json"; });
 
             app.UseSwaggerUI(c =>
@@ -142,12 +129,6 @@ namespace Blablatec
 
             app.UseSwagger();
 
-            app.UseHttpsRedirection();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {

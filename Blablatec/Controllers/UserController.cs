@@ -29,8 +29,9 @@ namespace Blablatec.Controllers
             _repositoryUser = repositoryUser;
         }
 
-        [Authorize]
+       
         [HttpGet]
+        [Authorize]
         public IActionResult GetAll()
         {
             var usuarios = _repositoryUser.GetAll();
