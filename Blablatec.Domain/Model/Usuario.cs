@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 using System.Text.Json.Serialization;
+using Blablatec.Domain.Interface;
 
 namespace Blablatec.Domain.Model
 {
     [Table("Usuario")]
-    public class Usuario: IEntity
+    public class Usuario: IEntity, IUser
     {
         [Column("id_usuario")]
         public int Id { get; set; }

@@ -1,4 +1,5 @@
-﻿using Blablatec.Domain.Model;
+﻿using Blablatec.Domain.Dto;
+using Blablatec.Domain.Model;
 using Blablatec.Infra;
 using Blablatec.Infra.Repositories;
 using Microsoft.AspNetCore.Authorization;
@@ -14,24 +15,26 @@ using System.Threading.Tasks;
 namespace Blablatec.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("user")]
     public class UserController : ControllerBase
     {
 
         private readonly ILogger<UserController> _logger;
         private readonly IRepository<Usuario> _repositoryUser;
-        private readonly ContextBlablatec _contextBlablatec;
+        private readonly IRepositoryUserManage _repositoryUserManage;
 
         public UserController(ILogger<UserController> logger,
-            IRepository<Usuario> repositoryUser)
+            IRepository<Usuario> repositoryUser,
+            IRepositoryUserManage repositoryUserManage)
         {
             _logger = logger;
             _repositoryUser = repositoryUser;
+            _repositoryUserManage = repositoryUserManage;
         }
 
        
         [HttpGet]
-        [Authorize]
         public IActionResult GetAll()
         {
             var usuarios = _repositoryUser.GetAll();
@@ -58,14 +61,17 @@ namespace Blablatec.Controllers
             return Ok(_repositoryUser.Save(usuario));
         }
 
-        [HttpPut("{id}")]
-        public IActionResult AtualizarUser([FromRoute] int id, Usuario usuario)
+        [HttpPut("{id}/profile")]
+        public async Task<IActionResult> UpdateProfile([FromRoute] int id, [FromBody] UpdateProfile usuario)
         {
             if (usuario.Id != id)
                 return StatusCode(StatusCodes.Status409Conflict,
                   $"Id do usuario divergente do id informado");
-            
-            var user = _repositoryUser.Update(usuario);
+            var usuarioLogado = User.Identity;
+
+
+
+            var user =await _repositoryUserManage.UpdateProfile(usuario);
 
             return Ok(user);
         }

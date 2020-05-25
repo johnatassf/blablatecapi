@@ -17,7 +17,6 @@ namespace Blablatec.Controllers
     {
         private readonly ILogger<CarroController> _logger;
         private readonly IRepository<Carro> _repositoryCarro;
-        private readonly ContextBlablatec _contextBlablatec;
 
         public CarroController(ILogger<CarroController> logger,
             IRepository<Carro> repositoryCarro)

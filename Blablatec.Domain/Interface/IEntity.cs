@@ -1,4 +1,4 @@
-﻿namespace Blablatec.Domain.Model
+﻿namespace Blablatec.Domain.Interface
 {
     public interface IEntity
     {

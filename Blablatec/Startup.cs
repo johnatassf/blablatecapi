@@ -47,6 +47,30 @@ namespace Blablatec
                 foreach (var nomeArquivo in Directory.GetFiles(caminhoAplicacao, "*.xml", SearchOption.AllDirectories))
                     c.IncludeXmlComments(nomeArquivo);
 
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Please insert JWT with Bearer into field",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    BearerFormat = "Bearer "
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement 
+                {
+                   {
+                     new OpenApiSecurityScheme
+                     {
+                       Reference = new OpenApiReference
+                       {
+                         Type = ReferenceType.SecurityScheme,
+                         Id = "Bearer"
+                       }
+                      },
+                      new string[] { }
+                    }
+                  });
+
             });
 
 
@@ -125,8 +149,10 @@ namespace Blablatec
             {
                 c.SwaggerEndpoint("/api-docs/v1/swagger.json", "My API V1");
                 c.RoutePrefix = "api-docs";
-            });
 
+
+
+            });
             app.UseSwagger();
 
 

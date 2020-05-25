@@ -1,4 +1,5 @@
-﻿using Blablatec.Domain.Model;
+﻿using Blablatec.Domain.Interface;
+using Blablatec.Domain.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;

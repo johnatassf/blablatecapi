@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Blablatec.Domain.Dto;
+using Blablatec.Domain.Interface;
 using Blablatec.Domain.Model;
 using Blablatec.Infra.Authorize;
     using Blablatec.Infra.Services;
@@ -47,13 +48,16 @@ namespace Blablatec.Infra.Repositories
             return new BaseResult<Usuario> { Success = true, Data = _user, Message = "Usuario criado com sucesso" };
         }
 
-        public bool Authorize(LoginUser loginUser)
+        public IUser Authorize(LoginUser loginUser)
         {
             var user = GetAll(u => u.Ra == loginUser.Ra).FirstOrDefault();
             if (user == null)
-                return false;
+                return null;
+            
+            if (ValidateHash(loginUser.Password, user.Passwordhash, user.Passwordsalt))
+                return user;
 
-            return ValidateHash(loginUser.Password, user.Passwordhash, user.Passwordsalt);
+            return null;
         }
         private Boolean ValidateHash(string password, byte[] passwordhash, byte[] passwordsalt)
         {
@@ -94,5 +98,22 @@ namespace Blablatec.Infra.Repositories
                 Update(user);
           
         }
+
+        public async Task<Usuario> UpdateProfile(UpdateProfile user)
+        {
+            var currentUser = _mapper.Map<Usuario>(user);
+            
+            byte[] hash, salt;
+
+            GererateHash(user.PassWord, out hash, out salt);
+            currentUser.Passwordhash = hash;
+            currentUser.Passwordsalt = salt;
+            
+            currentUser = Update(currentUser);
+
+            return await Task.FromResult(currentUser);
+
+        }
+
     }
 }

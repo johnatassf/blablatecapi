@@ -36,9 +36,9 @@ namespace Blablatec.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginUser loginUser)
         {
-            var authorization = _repositoryUserManage.Authorize(loginUser);
+            var user = _repositoryUserManage.Authorize(loginUser);
 
-            if (!authorization)
+            if (user == null)
             {
                 return BadRequest(new BaseResult<Object> { Message = "401 - Não autorizado", Success = false });
             }

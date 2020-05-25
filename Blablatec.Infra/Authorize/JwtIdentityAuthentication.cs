@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Blablatec.Domain.Interface;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System;
@@ -21,8 +22,6 @@ namespace Blablatec.Infra.Authorize
 
         public AuthenticationResult Authenticate(IUser user)
         {
-
-
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration["Security:Key"]);
 
@@ -42,6 +41,7 @@ namespace Blablatec.Infra.Authorize
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Name, user.Ra.ToString()),
+                    new Claim("Ra", user.Ra.ToString()),
                     new Claim(ClaimTypes.Role, "Login")
                 }),
                 NotBefore = notBefore,

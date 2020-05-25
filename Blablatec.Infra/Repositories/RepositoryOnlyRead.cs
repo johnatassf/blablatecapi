@@ -1,4 +1,5 @@
-﻿using Blablatec.Domain.Model;
+﻿using Blablatec.Domain.Interface;
+using Blablatec.Domain.Model;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
