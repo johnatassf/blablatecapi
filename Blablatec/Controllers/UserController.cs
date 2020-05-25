@@ -2,6 +2,7 @@
 using Blablatec.Domain.Model;
 using Blablatec.Infra;
 using Blablatec.Infra.Repositories;
+using Blablatec.Infra.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
@@ -23,14 +24,17 @@ namespace Blablatec.Controllers
         private readonly ILogger<UserController> _logger;
         private readonly IRepository<Usuario> _repositoryUser;
         private readonly IRepositoryUserManage _repositoryUserManage;
+        private readonly IServiceInformationUser _servicoInformacaoUsuario;
 
         public UserController(ILogger<UserController> logger,
             IRepository<Usuario> repositoryUser,
-            IRepositoryUserManage repositoryUserManage)
+            IRepositoryUserManage repositoryUserManage,
+            IServiceInformationUser servicoInformacaoUsuario)
         {
             _logger = logger;
             _repositoryUser = repositoryUser;
             _repositoryUserManage = repositoryUserManage;
+            _servicoInformacaoUsuario = servicoInformacaoUsuario;
         }
 
        
@@ -67,7 +71,7 @@ namespace Blablatec.Controllers
             if (usuario.Id != id)
                 return StatusCode(StatusCodes.Status409Conflict,
                   $"Id do usuario divergente do id informado");
-            var usuarioLogado = User.Identity;
+            var usuarioLogado = _servicoInformacaoUsuario.Ra;
 
 
 

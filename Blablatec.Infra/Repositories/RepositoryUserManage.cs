@@ -18,14 +18,17 @@ namespace Blablatec.Infra.Repositories
     {
         private readonly IMapper _mapper;
         private readonly IServiceEmail _serviceEmail;
+        private readonly IServiceInformationUser _informacaoUsuario;
 
         public RepositoryUserManage(
             ContextBlablatec contextBlablatec, 
             IMapper mapper,
-            IServiceEmail serviceEmail) : base(contextBlablatec)
+            IServiceEmail serviceEmail,
+            IServiceInformationUser informacaoUsuario) : base(contextBlablatec)
         {
             _mapper = mapper;
             _serviceEmail = serviceEmail;
+            _informacaoUsuario = informacaoUsuario;
         }
 
         public BaseResult<Usuario> RegisterUser(RegistroUsuarioDto user)

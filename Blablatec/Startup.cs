@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -13,6 +14,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -106,18 +108,24 @@ namespace Blablatec
         // Don't build the container; that gets done for you by the factory.
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            var dataAccess = Assembly.GetExecutingAssembly();
+            var assemblies = ObterAssemblies();
 
-            builder.RegisterAssemblyTypes(dataAccess)
-                   .Where(t => t.Name.StartsWith("Repository")
-                   || t.Name.StartsWith("Service"))
-                   .AsImplementedInterfaces();
+            foreach (var assembly in assemblies)
+            {
+                builder.RegisterAssemblyTypes(assembly)
+                  .Where(t => t.Name.StartsWith("Repository")
+                  || t.Name.StartsWith("Service"))
+                  .AsImplementedInterfaces();
+            }
+               
             // Register your own things
             // Register your own things directly with Autofac, like:
             builder.RegisterGeneric(typeof(BaseRepository<>)).As(typeof(IRepository<>));
             builder.RegisterType<JwtIdentityAuthentication>().As<IAuthentication>();
             builder.RegisterType<RepositoryUserManage>().As<IRepositoryUserManage>();
             builder.RegisterType<ServiceEmail>().As<IServiceEmail>();
+            builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>();
+            builder.RegisterType<ServiceInformationUser>().As<IServiceInformationUser>();
 
         }
 
@@ -162,6 +170,18 @@ namespace Blablatec
             });
         }
 
+
+        private static List<Assembly> ObterAssemblies()
+        {
+            var caminhoAplicacao = AppDomain.CurrentDomain.BaseDirectory;
+            var caminhosAssemblies = new[]
+            {
+                Path.Combine(caminhoAplicacao, "Blablatec.Domain.dll"),
+                Path.Combine(caminhoAplicacao, "Blablatec.Infra.dll")
+            };
+
+            return caminhosAssemblies.Select(Assembly.LoadFile).ToList();
+        }
 
     }
 }
