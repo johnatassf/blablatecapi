@@ -33,7 +33,7 @@ namespace Blablatec.Infra.Repositories
         }
         public async Task<T> GetOne(Expression<Func<T, bool>> expression)
         {
-            return await _dbSet.FirstAsync(expression);
+            return await _dbSet.FirstOrDefaultAsync(expression);
         }
 
         public T GetById(int id, params Expression<Func<T, object>>[] includes)

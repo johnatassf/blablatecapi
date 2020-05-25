@@ -5,6 +5,7 @@ using SendGrid;
 using SendGrid.Helpers.Mail;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,40 +14,38 @@ namespace Blablatec.Infra.Services
     public class ServiceEmail : IServiceEmail
     {
         private readonly IConfiguration _configuration;
-        
+
 
         public ServiceEmail(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
-        public async Task<bool> Send(string emailDestinatario, string nomeDestinatario, string subject, object templateData)
+        public async Task Send(string emailDestinatario, string nomeDestinatario, string assunto, string templateData, string plainTextContent)
         {
-         
-            var apiKey = _configuration["SendGrid:Key"];
-            var client = new SendGridClient(apiKey);
-            var message = new SendGridMessage()
+            try
             {
-                From = new EmailAddress(_configuration["EmailBlablatec"], "Blablatec"),
-                Personalizations = new List<Personalization>(),
-                Subject = subject
-            };
-            //message.TemplateId = _configuration["TemplateEmailId"];
+                var apiKey = _configuration["SendGrid:Key"];
+                var client = new SendGridClient(apiKey);
+                var msg = new SendGridMessage()
+                {
+                    From = new EmailAddress(_configuration["SendGrid:EmailBlablatec"], "Blablatec"),
+                    Subject = assunto,
+                    PlainTextContent = plainTextContent,
+                    HtmlContent = templateData
+                };
+                msg.AddTo(new EmailAddress("johnatas.santos@fatec.sp.gov.br", "User"));
+                var response = await client.SendEmailAsync(msg).ConfigureAwait(false);
 
-            message.Personalizations.Add(new Personalization()
+                if (response.StatusCode != HttpStatusCode.Accepted)
+                    throw new Exception("Erro ao enviar e-mail de nova senha");
+
+            }
+            catch (Exception ex)
             {
-                TemplateData = templateData
-            });
-
-            message.AddTo(new EmailAddress(emailDestinatario, nomeDestinatario));
-
-            var response = await client.SendEmailAsync(message);
-
-            if (response.StatusCode == System.Net.HttpStatusCode.Accepted)
-                return true;
-            else
-                return false;
-            
+                throw new Exception("Erro ao enviar e-mail de nova senha");
+            }
         }
     }
+
 }

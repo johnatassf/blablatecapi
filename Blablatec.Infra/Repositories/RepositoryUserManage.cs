@@ -79,11 +79,11 @@ namespace Blablatec.Infra.Repositories
         public async Task UpdatePassword(Usuario user)
         {
             var passWord = Guid.NewGuid().ToString().Substring(0, 8);
-            var mensagem = "Nova senha";
-            var emailEnviado = await _serviceEmail.Send(user.Email, user.Nome, mensagem, new { passWord });
-
-            if (emailEnviado)
-            {
+            var assunto = "Renovação de acesso";
+            var template = @$"<strong> Olá, aqui está sua nova senha do Blablatec: {passWord} </strong>";
+            var textContent = @$"Blablatec: Renovação de acesso -- Nova senha {passWord} ";
+            
+            await _serviceEmail.Send(user.Email, user.Nome, assunto, template, textContent);
 
                 byte[] hash, salt;
 
@@ -92,11 +92,7 @@ namespace Blablatec.Infra.Repositories
                 user.Passwordsalt = salt;
 
                 Update(user);
-            }
-            else
-            {
-                throw new Exception("Erro ao enviar e-mail para reset da senha");
-            }
+          
         }
     }
 }
