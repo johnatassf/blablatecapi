@@ -38,7 +38,7 @@ namespace Blablatec
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddCors();
+           
 
             services.AddSwaggerGen(c =>
             {
