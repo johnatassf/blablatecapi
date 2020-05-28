@@ -25,19 +25,22 @@ namespace Blablatec.Controllers
         private readonly IRepository<Usuario> _repositoryUser;
         private readonly IRepositoryUserManage _repositoryUserManage;
         private readonly IServiceInformationUser _servicoInformacaoUsuario;
+        private readonly IServiceInformationUser _informacaoUsuario;
 
         public UserController(ILogger<UserController> logger,
             IRepository<Usuario> repositoryUser,
             IRepositoryUserManage repositoryUserManage,
-            IServiceInformationUser servicoInformacaoUsuario)
+            IServiceInformationUser servicoInformacaoUsuario,
+            IServiceInformationUser informacaoUsuario)
         {
             _logger = logger;
             _repositoryUser = repositoryUser;
             _repositoryUserManage = repositoryUserManage;
             _servicoInformacaoUsuario = servicoInformacaoUsuario;
+            _informacaoUsuario = informacaoUsuario;
         }
 
-       
+        [Authorize]
         [HttpGet]
         public IActionResult GetAll()
         {
@@ -50,6 +53,14 @@ namespace Blablatec.Controllers
         public IActionResult GetId([FromRoute] int id)
         {
             var usuarios = _repositoryUser.GetById(id);
+
+            return Ok(usuarios);
+        }
+
+        [HttpGet("getByRa")]
+        public IActionResult GetByRa()
+        {
+            var usuarios = _repositoryUser.GetAll().Where(p => p.Ra == _informacaoUsuario.Ra);
 
             return Ok(usuarios);
         }
