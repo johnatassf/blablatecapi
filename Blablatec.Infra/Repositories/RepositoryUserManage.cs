@@ -108,9 +108,11 @@ namespace Blablatec.Infra.Repositories
             
             byte[] hash, salt;
 
-            GererateHash(user.PassWord, out hash, out salt);
-            currentUser.Passwordhash = hash;
-            currentUser.Passwordsalt = salt;
+            if(user.PassWord != null) {
+                GererateHash(user.PassWord, out hash, out salt);
+                currentUser.Passwordhash = hash;
+                currentUser.Passwordsalt = salt;
+            }
             
             currentUser = Update(currentUser);
 
