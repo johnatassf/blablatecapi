@@ -12,7 +12,7 @@ namespace Blablatec.Infra.Repositories
 {
     public class BaseRepository<T> : RepositoryOnlyRead<T>, IRepositoryOnlyRead<T>, IRepository<T> where T : class, IEntity
     {
-        private readonly ContextBlablatec _contextBlablatec;
+        private readonly ContextBlablatec    _contextBlablatec;
         private readonly DbSet<T> _dbSet;
 
         public BaseRepository(ContextBlablatec contextBlablatec): base(contextBlablatec)
@@ -28,7 +28,7 @@ namespace Blablatec.Infra.Repositories
             _contextBlablatec.SaveChanges();
         }
 
-        public T Save(T entity)
+        public virtual T Save(T entity)
         {
             _dbSet.Add(entity);
             _contextBlablatec.SaveChanges();
