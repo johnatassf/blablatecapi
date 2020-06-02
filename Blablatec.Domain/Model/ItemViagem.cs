@@ -22,7 +22,6 @@ namespace Blablatec.Domain.Model
         public DateTime Viagem { get; set; }
         [Column("dt_finalizacao")]
         public DateTime Finalizacao { get; set; }
-
-
+        public bool EmAndamento { get; set; }
     }
 }
