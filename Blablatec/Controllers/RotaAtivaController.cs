@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace Blablatec.Controllers
 {
+    [Route("rotas")]
     public class RotaAtivaController: ControllerBase
     {
         private readonly IRepository<RotaAtiva> _repositoryRotaAtiva;
@@ -46,8 +47,7 @@ namespace Blablatec.Controllers
         public async Task<IActionResult> GetRotasAtivasPorMotorista([FromRoute] decimal idMotorista)
         {
             var viagem = await _repositoryRotaAtiva.GetOne(u => u.Viagem.IdMotorista == idMotorista 
-            && u.Viagem.Finalizacao == null
-            && u.Viagem.EmAndamento == true);
+            && u.Viagem.Finalizacao == null);
 
             if (viagem == null)
                 return NotFound("Nenhuma viagem ativa para este morista foi encotrada");
@@ -66,7 +66,7 @@ namespace Blablatec.Controllers
             if(viagem.Finalizacao != null)
                 return BadRequest($"Viagem {viagem.Id} já foi finalizada");
 
-            var rotasEmAndamento = _repositoryRotaAtiva.GetOne(r => r.IdItemViagem == viagem.Id && r.Viagem.EmAndamento == true);
+            var rotasEmAndamento = _repositoryRotaAtiva.GetOne(r => r.IdItemViagem == viagem.Id );
             
             if(rotasEmAndamento != null)
                 return BadRequest($"Viagem {viagem.Id} já obtem uma rota em andamento");

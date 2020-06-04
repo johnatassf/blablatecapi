@@ -14,14 +14,11 @@ namespace Blablatec.Domain.Model
         public int Id { get; set; }
         [Column("vl_viagem")]
         public double Valor { get; set; }
-        [Column("id_usuario_carona")]
-        public int IdCarona { get; set; }
         [Column("id_usuario_motorista")]
         public int IdMotorista { get; set; }
         [Column("dt_viagem")]
         public DateTime Viagem { get; set; }
         [Column("dt_finalizacao")]
         public DateTime Finalizacao { get; set; }
-        public bool EmAndamento { get; set; }
     }
 }

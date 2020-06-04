@@ -18,6 +18,8 @@ namespace Blablatec.Infra.Mapeamento
             CreateMap<UpdateProfile, Usuario>()
                 .ForMember(dest => dest.Nome, config => config.MapFrom(source => source.Name))
                  .ForMember(dest => dest.Sobrenome, config => config.MapFrom(source => source.LastName));
+            
+            CreateMap<ViagemDtoEntrada, Viagem>();
 
 
         }

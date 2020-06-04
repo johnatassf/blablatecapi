@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Blablatec.Domain.Dto;
 using Blablatec.Domain.Model;
 using Blablatec.Infra.Repositories;
+using Blablatec.Infra.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,23 +15,29 @@ namespace Blablatec.Controllers
 {
     [ApiController]
     [Route("viagens")]
-    public class ItemViagemController : Controller
+    public class ViagemController : Controller
     {
-        private readonly IRepository<ItemViagem> _repositoryViagem;
+        private readonly IRepository<Viagem> _reposotoryViagem;
         private readonly IRepository<Usuario> _repositoryUser;
+        private readonly IMapper _mapper;
+        private readonly int _idUsuarioLogado;
 
-        public ItemViagemController(
-            IRepository<ItemViagem> repositoryViagem,
-            IRepository<Usuario> repositoryUser)
+        public ViagemController(
+            IRepository<Viagem> reposotoryViagem,
+            IRepository<Usuario> repositoryUser,
+            IMapper mapper,
+            IServiceInformationUser servicoInformacaoUsuario)
         {
-            _repositoryViagem = repositoryViagem;
+            _reposotoryViagem = reposotoryViagem;
             _repositoryUser = repositoryUser;
+            _mapper = mapper;
+            _idUsuarioLogado = Convert.ToInt32(servicoInformacaoUsuario.IdUsuario);
         }
 
         [HttpGet]
         public IActionResult GetAll()
         {
-            var viagems = _repositoryViagem.GetAll();
+            var viagems = _reposotoryViagem.GetAll();
 
             return Ok(viagems);
         }
@@ -36,7 +45,7 @@ namespace Blablatec.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById([FromRoute] int id)
         {
-            var viagem = _repositoryViagem.GetAll();
+            var viagem = _reposotoryViagem.GetAll();
 
             if (viagem == null)
                 return NotFound("Viagem {id} não encontrada");
@@ -52,7 +61,7 @@ namespace Blablatec.Controllers
             if (motorista == null)
                 return NotFound("Motorista não encontrado");
 
-            var viagems = _repositoryViagem.GetAll(v => v.IdMotorista == id);
+            var viagems = _reposotoryViagem.GetAll(v => v.IdMotorista == id);
 
             return Ok(viagems);
         }
@@ -65,20 +74,21 @@ namespace Blablatec.Controllers
             if (motorista == null)
                 return NotFound("Motorista não encontrado");
 
-            var viagems = _repositoryViagem.GetAll(v => v.IdMotorista == id && v.Finalizacao == null);
+            var viagems = _reposotoryViagem.GetAll(v => v.IdMotorista == id);
 
             return Ok(viagems);
         }
 
         [HttpPost()]
-        public async Task<IActionResult> CriarViagem(ItemViagem viagem)
+        public async Task<IActionResult> CriarViagem(ViagemDtoEntrada viagemEntrada)
         {
-            var motorista = await _repositoryUser.GetOne(u => u.Id == viagem.IdMotorista);
+            var motorista = await _repositoryUser.GetOne(u => u.Id == _idUsuarioLogado);
 
             if (motorista == null)
                 return BadRequest("Motorista não encontrado");
-
-            viagem = _repositoryViagem.Save(viagem);
+            var viagem = _mapper.Map<Viagem>(viagemEntrada);
+           
+            viagem = _reposotoryViagem.Save(viagem);
 
             return Created(nameof(GetById), viagem);
         }
