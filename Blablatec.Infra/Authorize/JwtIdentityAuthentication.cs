@@ -15,7 +15,8 @@ namespace Blablatec.Infra.Authorize
     {
         private readonly IConfiguration _configuration;
 
-        public JwtIdentityAuthentication(IConfiguration configuration)
+        public JwtIdentityAuthentication(
+            IConfiguration configuration)
         {
             _configuration = configuration;
         }
@@ -42,6 +43,7 @@ namespace Blablatec.Infra.Authorize
                 {
                     new Claim(ClaimTypes.Name, user.Ra.ToString()),
                     new Claim("Ra", user.Ra.ToString()),
+                    new Claim("Id", user.Id.ToString()),
                     new Claim(ClaimTypes.Role, "Login")
                 }),
                 NotBefore = notBefore,

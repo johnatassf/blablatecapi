@@ -80,15 +80,16 @@ namespace Blablatec.Controllers
         }
 
         [HttpPost()]
-        public async Task<IActionResult> CriarViagem(ViagemDtoEntrada viagemEntrada)
+        public IActionResult CriarViagem(ViagemDtoEntrada viagemEntrada)
         {
-            var motorista = await _repositoryUser.GetOne(u => u.Id == _idUsuarioLogado);
+            var motorista = _repositoryUser.GetById(_idUsuarioLogado) ;
 
             if (motorista == null)
                 return BadRequest("Motorista não encontrado");
             var viagem = _mapper.Map<Viagem>(viagemEntrada);
-           
+            viagem.IdMotorista = motorista.Id;
             viagem = _reposotoryViagem.Save(viagem);
+           
 
             return Created(nameof(GetById), viagem);
         }

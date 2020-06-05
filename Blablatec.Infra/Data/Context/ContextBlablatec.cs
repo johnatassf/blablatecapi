@@ -16,7 +16,7 @@ namespace Blablatec.Infra
 
         DbSet<Usuario> Usuarios { get; set; }
         DbSet<ItemViagem> ItemViagems { get; set; }
-
+        DbSet<Viagem> Viagens { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

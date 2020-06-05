@@ -2,6 +2,7 @@
 {
     public interface IUser
     {
-        string Ra { get; set; }
+        public string Ra { get; set; }
+        public int Id { get; set; }
     }
 }

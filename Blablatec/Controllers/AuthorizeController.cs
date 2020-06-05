@@ -43,7 +43,7 @@ namespace Blablatec.Controllers
                 return BadRequest(new BaseResult<Object> { Message = "401 - Não autorizado", Success = false });
             }
 
-            var authentication = _serviceAuthentication.Authenticate(loginUser);
+            var authentication = _serviceAuthentication.Authenticate(user);
 
             if (!authentication.Success)
             {

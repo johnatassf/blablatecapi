@@ -11,13 +11,25 @@ namespace Blablatec.Domain.Model
     {
         [Column("id_viagem")]
         public int Id { get; set; }
-        [Column("id_usuario_motorista ")]
+        [Column("id_usuario_motorista")]
         public int IdMotorista { get; set; }
         [Column("nm_origem_viagem")]
         public string PontoInicial { get; set; }
+        
         [Column("nm_destino_viagem")]
         public string PontoFinal { get; set; }
+        
         [Column("qtd_lugar_disponivel")]
         public int QtdLugares { get; set; }
+       
+        [Column("vl_viagem")]
+        public double  Valor { get; set; }
+        
+        [Column("dt_viagem")]
+        public DateTime? DataViagem { get; set; }
+       
+        [Column("dt_finalizacao")]
+        public DateTime? Finalizacao { get; set; }
+
     }
 }
