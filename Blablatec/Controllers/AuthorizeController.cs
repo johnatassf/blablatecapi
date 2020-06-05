@@ -66,7 +66,7 @@ namespace Blablatec.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("reset-password")]
+        [HttpGet("reset-password")]
         public async Task<IActionResult> ResetPassWord(string ra, string email)
         {
            var user = await _repositoryUsuario.GetOne(u => u.Ra == ra && u.Email == email);

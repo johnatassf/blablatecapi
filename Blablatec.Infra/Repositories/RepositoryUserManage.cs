@@ -19,25 +19,29 @@ namespace Blablatec.Infra.Repositories
         private readonly IMapper _mapper;
         private readonly IServiceEmail _serviceEmail;
         private readonly IServiceInformationUser _informacaoUsuario;
+        private readonly IRepository<Carro> _repositoryCarro;
 
         public RepositoryUserManage(
             ContextBlablatec contextBlablatec, 
             IMapper mapper,
             IServiceEmail serviceEmail,
-            IServiceInformationUser informacaoUsuario) : base(contextBlablatec)
+            IServiceInformationUser informacaoUsuario,
+            IRepository<Carro> repositoryCarro) : base(contextBlablatec)
         {
             _mapper = mapper;
             _serviceEmail = serviceEmail;
             _informacaoUsuario = informacaoUsuario;
+            _repositoryCarro = repositoryCarro;
         }
 
         public BaseResult<Usuario> RegisterUser(RegistroUsuarioDto user)
         {
-            if (GetAll(u => u.Nome == user.Ra).Any())
+            if (GetAll(u => u.Ra.Equals(user.Ra)).Any())
                 return new BaseResult<Usuario> { Success = false, Message = "Ra cadastrado" };
             
-            if (GetAll(u => u.Email == user.Email).Any())
+            if (GetAll(u => u.Email.Equals(user.Email)).Any())
                 return new BaseResult<Usuario> { Success = false, Message = "E-mail cadastrado cadastrado" };
+
 
             var currentUser =  _mapper.Map<Usuario>(user);
             byte[] hash, salt;
@@ -48,7 +52,26 @@ namespace Blablatec.Infra.Repositories
 
             var _user = Save(currentUser);
 
+            if (user.Motorista)
+                RegistrarCarroAoMotorista(user, 5);
+
             return new BaseResult<Usuario> { Success = true, Data = _user, Message = "Usuario criado com sucesso" };
+        }
+
+        private void RegistrarCarroAoMotorista(RegistroUsuarioDto user, int idUsuarioRegistrado)
+        {
+            if (string.IsNullOrEmpty(user.Placa))
+                throw new Exception("Por favor informe a placa do carro para registro do mesmo");
+            var carro = new Carro()
+            {
+                Cor = user.CorCarro,
+                Marca = user.Modelo,
+                Placa = user.Placa,
+                QuantidadeLugares = user.QtsLugares,
+                IdMotorista = idUsuarioRegistrado
+            };
+
+            _repositoryCarro.Save(carro);
         }
 
         public IUser Authorize(LoginUser loginUser)

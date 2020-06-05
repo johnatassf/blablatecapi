@@ -11,7 +11,10 @@ namespace Blablatec.Domain.Dto
         public string Nome { get; set; }
         public string Sobrenome { get; set; }
         public string Ra { get; set; }
-
-       
+        public bool Motorista { get; set; }
+        public string Modelo { get; set; }
+        public string Placa { get; set; }
+        public string CorCarro { get; set; }
+        public int QtsLugares { get; set; }
     }
 }
