@@ -45,9 +45,19 @@ namespace Blablatec.Infra.Repositories
             return queryWithIncludes.FirstOrDefault(entity => entity.Id == id);
         }
 
-        public T GetEntityByExpression(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includes)
+        public List<T> GetEntityByExpression(Expression<Func<T, bool>> expression = null, params Expression<Func<T, object>>[] includes)
         {
-            throw new NotImplementedException();
+            var lista = ObterTodosComInclude(includes);
+            if(expression != null)
+            lista = lista.Where(expression);
+
+            return lista.AsNoTracking().ToList();
+        }
+
+        private IQueryable<T> ObterTodosComInclude(params Expression<Func<T, object>>[] includes)
+        {
+            return includes.Aggregate(_dbSet.AsQueryable().AsNoTracking(),
+                (consulta, include) => consulta.Include(include));
         }
 
     }

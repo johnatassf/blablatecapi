@@ -37,7 +37,7 @@ namespace Blablatec.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var viagems = _reposotoryViagem.GetAll();
+            var viagems = _reposotoryViagem.GetEntityByExpression(includes: v=> v.Motorista);
 
             return Ok(viagems);
         }

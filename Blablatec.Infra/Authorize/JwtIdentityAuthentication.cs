@@ -34,8 +34,8 @@ namespace Blablatec.Infra.Authorize
             new Claim("Data", ToJson(user))
         };
 
-            var notBefore = DateTime.UtcNow;
-            var expires = DateTime.UtcNow + TimeSpan.FromSeconds(60000);
+                var notBefore = DateTime.UtcNow;
+                var expires = DateTime.UtcNow + TimeSpan.FromSeconds(60000);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -45,7 +45,7 @@ namespace Blablatec.Infra.Authorize
                     new Claim("Ra", user.Ra.ToString()),
                     new Claim("Id", user.Id.ToString()),
                     new Claim(ClaimTypes.Role, "Login")
-                }),
+                }), 
                 NotBefore = notBefore,
                 Expires = expires,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

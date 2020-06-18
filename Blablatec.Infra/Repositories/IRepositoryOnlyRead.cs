@@ -12,7 +12,7 @@ namespace Blablatec.Infra.Repositories
 
         T GetById(int id, params Expression<Func<T, object>>[] includes);
 
-        T GetEntityByExpression(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includes);
+        List<T> GetEntityByExpression(Expression<Func<T, bool>> expression = null, params Expression<Func<T, object>>[] includes);
 
         List<T> GetAll();
 

@@ -20,16 +20,19 @@ namespace Blablatec.Domain.Model
         public string PontoFinal { get; set; }
 
         [Column("qtd_lugar_disponivel")]
-        public int QtdLugares { get; set; }
+        public int? QtdLugares { get; set; }
 
         [Column("vl_viagem")]
-        public double Valor { get; set; }
+        public double? Valor { get; set; }
 
         [Column("dt_viagem")]
         public DateTime? DataViagem { get; set; }
 
         [Column("dt_finalizacao")]
         public DateTime? Finalizacao { get; set; }
+
+        [ForeignKey("IdMotorista")]
+        public Usuario Motorista { get; set; }
 
     }
 }

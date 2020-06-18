@@ -176,7 +176,7 @@ namespace Blablatec
 
 
         private static List<Assembly> ObterAssemblies()
-        {
+        {   
             var caminhoAplicacao = AppDomain.CurrentDomain.BaseDirectory;
             var caminhosAssemblies = new[]
             {
