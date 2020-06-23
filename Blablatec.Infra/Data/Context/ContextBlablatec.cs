@@ -18,7 +18,7 @@ namespace Blablatec.Infra
         DbSet<ItemViagem> ItemViagems { get; set; }
         DbSet<Viagem> Viagens { get; set; }
         DbSet<Carro> Carros { get; set; }
-
+        DbSet<SolicitacaoViagem> SolicitacaoViagem { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseMySql(_configuration["ConnectionString:Connection"]);
