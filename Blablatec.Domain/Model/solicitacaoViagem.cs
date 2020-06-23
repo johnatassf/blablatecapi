@@ -12,14 +12,12 @@ namespace Blablatec.Domain.Model
     [Table("solicitacaoViagem")]
     public class solicitacaoViagem : IEntity
     {
-        
+        [Key]
         [Column("id_solicitacao_viagem")]
         public int Id { get; set; }
-
-        [Key]
+       
         [Column("id_usuario_carona")]
         public int IdUsuarioCarona { get; set; }
-        [Key]
         [Column("id_viagem")]
         public int IdViagem { get; set; }
     }

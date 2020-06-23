@@ -22,6 +22,7 @@ namespace Blablatec.Infra.Mapeamento
             CreateMap<ViagemDtoEntrada, Viagem>()
             .ForMember(dest => dest.DataViagem, config => config.MapFrom(source => source.Viagem));
 
+            CreateMap<Viagem, ViagemDtoSaida>();
 
         }
     }

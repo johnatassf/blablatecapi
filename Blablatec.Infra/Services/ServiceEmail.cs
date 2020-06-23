@@ -25,20 +25,20 @@ namespace Blablatec.Infra.Services
         {
             try
             {
-                var apiKey = _configuration["SendGrid:Key"];
-                var client = new SendGridClient(apiKey);
-                var msg = new SendGridMessage()
-                {
-                    From = new EmailAddress(_configuration["SendGrid:EmailBlablatec"], "Blablatec"),
-                    Subject = assunto,
-                    PlainTextContent = plainTextContent,
-                    HtmlContent = templateData
-                };
-                msg.AddTo(new EmailAddress("johnatas.santos@fatec.sp.gov.br", "User"));
-                var response = await client.SendEmailAsync(msg).ConfigureAwait(false);
+                //var apiKey = _configuration["SendGrid:Key"];
+                //var client = new SendGridClient(apiKey);
+                //var msg = new SendGridMessage()
+                //{
+                //    From = new EmailAddress(_configuration["SendGrid:EmailBlablatec"], "Blablatec"),
+                //    Subject = assunto,
+                //    PlainTextContent = plainTextContent,
+                //    HtmlContent = templateData
+                //};
+                //msg.AddTo(new EmailAddress("johnatas.santos@fatec.sp.gov.br", "User"));
+                //var response = await client.SendEmailAsync(msg).ConfigureAwait(false);
 
-                if (response.StatusCode != HttpStatusCode.Accepted)
-                    throw new Exception("Erro ao enviar e-mail de nova senha");
+                //if (response.StatusCode != HttpStatusCode.Accepted)
+                //    throw new Exception("Erro ao enviar e-mail de nova senha");
 
             }
             catch (Exception ex)

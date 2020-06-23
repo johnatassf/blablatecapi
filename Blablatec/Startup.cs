@@ -126,6 +126,7 @@ namespace Blablatec
             builder.RegisterType<ServiceEmail>().As<IServiceEmail>();
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>();
             builder.RegisterType<ServiceInformationUser>().As<IServiceInformationUser>();
+            builder.RegisterType<RepositoryViagem>().As<IRepositoryViagem>();
 
         }
 

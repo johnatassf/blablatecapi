@@ -112,10 +112,10 @@ namespace Blablatec.Infra.Repositories
             var assunto = "Renovação de acesso";
             var template = @$"<strong> Olá, aqui está sua nova senha do Blablatec: {passWord} </strong>";
             var textContent = @$"Blablatec: Renovação de acesso -- Nova senha {passWord} ";
-            
+
             await _serviceEmail.Send(user.Email, user.Nome, assunto, template, textContent);
 
-                byte[] hash, salt;
+            byte[] hash, salt;
 
                 GererateHash(passWord, out hash, out salt);
                 user.Passwordhash = hash;

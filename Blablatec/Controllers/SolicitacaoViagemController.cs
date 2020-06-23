@@ -1,6 +1,7 @@
 ﻿using Blablatec.Domain.Model;
 using Blablatec.Infra.Repositories;
 using Blablatec.Infra.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -19,6 +20,7 @@ namespace Blablatec.Controllers
         private readonly IRepository<solicitacaoViagem> _repositorySolicitacaoViagem;
         private readonly IRepository<Viagem> _repositoryViagem;
         private readonly int _idUsuarioLogado;
+        private readonly IServiceInformationUser _serviceInformationUser;
 
         public SolicitacaoViagemController(ILogger<SolicitacaoViagemController> logger,
             IRepository<solicitacaoViagem> repositorySolicitacaoViagem,
@@ -29,6 +31,7 @@ namespace Blablatec.Controllers
             _repositorySolicitacaoViagem = repositorySolicitacaoViagem;
             _repositoryViagem = repositoryViagem;
             _idUsuarioLogado = Convert.ToInt32(serviceInformationUser.IdUsuario);
+            _serviceInformationUser = serviceInformationUser;
         }
 
         [HttpGet]
@@ -47,6 +50,8 @@ namespace Blablatec.Controllers
             return Ok(carros);
         }
 
+  
+        [Authorize]
         [HttpPost("viagem/{idViagem}")]
         public IActionResult CriarSolicitacaoViagem([FromRoute]int idViagem)
         {
@@ -73,6 +78,7 @@ namespace Blablatec.Controllers
         [HttpDelete("viagem/{idViagem}")]
         public async Task<IActionResult> RemoverSolicitacaoViagem([FromRoute]int idViagem)
         {
+
             var viagem = _repositoryViagem.GetById(idViagem);
 
             if (viagem == null)

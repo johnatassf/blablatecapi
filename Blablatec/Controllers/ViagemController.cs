@@ -17,27 +17,36 @@ namespace Blablatec.Controllers
     [Route("viagens")]
     public class ViagemController : Controller
     {
-        private readonly IRepository<Viagem> _reposotoryViagem;
         private readonly IRepository<Usuario> _repositoryUser;
         private readonly IMapper _mapper;
         private readonly int _idUsuarioLogado;
+        private readonly IRepositoryViagem _repositoryViagem;
 
         public ViagemController(
             IRepository<Viagem> reposotoryViagem,
             IRepository<Usuario> repositoryUser,
             IMapper mapper,
-            IServiceInformationUser servicoInformacaoUsuario)
+            IServiceInformationUser servicoInformacaoUsuario,
+            IRepositoryViagem repositoryViagem)
         {
-            _reposotoryViagem = reposotoryViagem;
             _repositoryUser = repositoryUser;
             _mapper = mapper;
             _idUsuarioLogado = Convert.ToInt32(servicoInformacaoUsuario.IdUsuario);
+            _repositoryViagem = repositoryViagem;
         }
 
         [HttpGet]
         public IActionResult GetAll()
         {
-            var viagems = _reposotoryViagem.GetEntityByExpression(includes: v=> v.Motorista);
+            var viagems = _repositoryViagem.GetEntityByExpression(includes: v=> v.Motorista);
+
+            return Ok(viagems);
+        }
+
+        [HttpGet("viagens-abertas")]
+        public IActionResult GetViagensEmAberto()
+        {
+            var viagems = _repositoryViagem.ListasViagensEmAberto();
 
             return Ok(viagems);
         }
@@ -45,7 +54,7 @@ namespace Blablatec.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById([FromRoute] int id)
         {
-            var viagem = _reposotoryViagem.GetAll();
+            var viagem = _repositoryViagem.GetAll();
 
             if (viagem == null)
                 return NotFound("Viagem {id} não encontrada");
@@ -61,7 +70,7 @@ namespace Blablatec.Controllers
             if (motorista == null)
                 return NotFound("Motorista não encontrado");
 
-            var viagems = _reposotoryViagem.GetAll(v => v.IdMotorista == id);
+            var viagems = _repositoryViagem.GetAll(v => v.IdMotorista == id);
 
             return Ok(viagems);
         }
@@ -74,7 +83,7 @@ namespace Blablatec.Controllers
             if (motorista == null)
                 return NotFound("Motorista não encontrado");
 
-            var viagems = _reposotoryViagem.GetAll(v => v.IdMotorista == id);
+            var viagems = _repositoryViagem.GetAll(v => v.IdMotorista == id);
 
             return Ok(viagems);
         }
@@ -88,7 +97,7 @@ namespace Blablatec.Controllers
                 return BadRequest("Motorista não encontrado");
             var viagem = _mapper.Map<Viagem>(viagemEntrada);
             viagem.IdMotorista = motorista.Id;
-            viagem = _reposotoryViagem.Save(viagem);
+            viagem = _repositoryViagem.Save(viagem);
 
 
             return Created(nameof(GetById), viagem);
