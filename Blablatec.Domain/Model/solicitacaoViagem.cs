@@ -7,18 +7,19 @@ using System.Text;
 
 namespace Blablatec.Domain.Model
 {
-
-
-    [Table("solicitacaoViagem")]
-    public class solicitacaoViagem : IEntity
+    [Table("solicitacaoviagem")]
+    public class SolicitacaoViagem : IEntity
     {
         [Key]
         [Column("id_solicitacao_viagem")]
         public int Id { get; set; }
-       
         [Column("id_usuario_carona")]
-        public int IdUsuarioCarona { get; set; }
+        public int IdUsuario { get; set; }
+        [ForeignKey("IdUsuario")]
+        public Usuario Carona { get; set; }
         [Column("id_viagem")]
         public int IdViagem { get; set; }
+        [ForeignKey("IdViagem")]
+        public Viagem Viagem { get; set; }
     }
 }
