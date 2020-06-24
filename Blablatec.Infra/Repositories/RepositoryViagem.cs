@@ -39,7 +39,7 @@ namespace Blablatec.Infra.Repositories
             viagensDtoSaida.ForEach(viagem =>
            {
                viagem.MotoristaDaCorrida = viagem.IdMotorista == _idUsuario;
-               viagem.JaSolicitado = viagensSolicitadas.Where(v => v.IdUsuarioCarona == _idUsuario
+               viagem.JaSolicitado = viagensSolicitadas.Where(v => v.IdUsuario== _idUsuario
                && v.IdViagem == viagem.Id)
                .Any();
            });

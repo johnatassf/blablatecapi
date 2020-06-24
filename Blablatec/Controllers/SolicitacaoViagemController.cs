@@ -37,7 +37,7 @@ namespace Blablatec.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var carros = _repositorySolicitacaoViagem.GetAll();
+            var carros = _repositorySolicitacaoViagem.GetEntityByExpression(null, v=> v.Viagem, v => v.Carona );
 
             return Ok(carros);
         }
@@ -68,7 +68,7 @@ namespace Blablatec.Controllers
 
             var solicitacaoViagem = new solicitacaoViagem()
             {
-                IdUsuarioCarona = _idUsuarioLogado,
+                IdUsuario = _idUsuarioLogado,
                 IdViagem = viagem.Id
             };
 
@@ -87,7 +87,7 @@ namespace Blablatec.Controllers
             if (viagem.Finalizacao != null)
                 return BadRequest("Viagem ja finalizada");
 
-            var solicitacao = await _repositorySolicitacaoViagem.GetOne(s => s.IdUsuarioCarona == _idUsuarioLogado && s.IdViagem == idViagem);
+            var solicitacao = await _repositorySolicitacaoViagem.GetOne(s => s.IdUsuario == _idUsuarioLogado && s.IdViagem == idViagem);
 
             if (solicitacao == null)
                 return BadRequest("Solicitacao viagem não encontrada");

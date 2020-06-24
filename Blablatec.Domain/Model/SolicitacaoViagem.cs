@@ -8,7 +8,7 @@ using System.Text;
 namespace Blablatec.Domain.Model
 {
     [Table("solicitacaoviagem")]
-    public class SolicitacaoViagem : IEntity
+    public class solicitacaoViagem : IEntity
     {
         [Key]
         [Column("id_solicitacao_viagem")]
