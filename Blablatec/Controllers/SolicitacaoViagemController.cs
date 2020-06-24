@@ -17,13 +17,13 @@ namespace Blablatec.Controllers
     public class SolicitacaoViagemController : ControllerBase
     {
         private readonly ILogger<SolicitacaoViagemController> _logger;
-        private readonly IRepository<solicitacaoViagem> _repositorySolicitacaoViagem;
+        private readonly IRepository<SolicitacaoViagem> _repositorySolicitacaoViagem;
         private readonly IRepository<Viagem> _repositoryViagem;
         private readonly int _idUsuarioLogado;
         private readonly IServiceInformationUser _serviceInformationUser;
 
         public SolicitacaoViagemController(ILogger<SolicitacaoViagemController> logger,
-            IRepository<solicitacaoViagem> repositorySolicitacaoViagem,
+            IRepository<SolicitacaoViagem> repositorySolicitacaoViagem,
             IRepository<Viagem> repositoryViagem,
             IServiceInformationUser serviceInformationUser)
         {
@@ -66,7 +66,7 @@ namespace Blablatec.Controllers
             if (viagem.IdMotorista == _idUsuarioLogado)
                 return BadRequest("Usuário motorista não pode solicitar carona para sua própria corrida");
 
-            var solicitacaoViagem = new solicitacaoViagem()
+            var solicitacaoViagem = new SolicitacaoViagem()
             {
                 IdUsuario = _idUsuarioLogado,
                 IdViagem = viagem.Id

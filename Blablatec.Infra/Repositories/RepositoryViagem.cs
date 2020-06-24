@@ -12,13 +12,13 @@ namespace Blablatec.Infra.Repositories
     public class RepositoryViagem : BaseRepository<Viagem>, IRepository<Viagem>, IRepositoryViagem
     {
         private readonly IMapper _mapper;
-        private readonly IRepository<solicitacaoViagem> _repositorySolicitacaoViagem;
+        private readonly IRepository<SolicitacaoViagem> _repositorySolicitacaoViagem;
         private readonly int _idUsuario;
         private readonly IServiceInformationUser _serviceInformationUser;
 
         public RepositoryViagem(ContextBlablatec contextBlablatec,
             IMapper mapper,
-            IRepository<solicitacaoViagem> repositorySolicitacaoViagem,
+            IRepository<SolicitacaoViagem> repositorySolicitacaoViagem,
             IServiceInformationUser serviceInformationUser) : base(contextBlablatec)
         {
             _mapper = mapper;
