@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Blablatec.Domain.Model
 {
-    [Table("Veiculo")]
+    [Table("veiculo")]
     public class Carro: IEntity
     {
         [Key]
