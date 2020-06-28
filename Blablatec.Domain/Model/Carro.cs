@@ -16,7 +16,8 @@ namespace Blablatec.Domain.Model
         [Column("id_placa_veiculo")] 
 
         public string Placa { get; set; }
-        [Column("qtd_lugar_veiculo")] 
+
+        [Column("qt_lugar_veiculo")]
         public int QuantidadeLugares { get; set; }
         [Column("nm_modelo_veiculo")] 
         public string Marca { get; set; }

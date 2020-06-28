@@ -28,7 +28,7 @@ namespace Blablatec.Infra.Authorize
             _configuration = configuration;
             _repositoryCarro = repositoryCarro;
             _contextBlablatec = contextBlablatec;
-    }
+        }
 
         public AuthenticationResult Authenticate(IUser user)
         {
@@ -42,29 +42,26 @@ namespace Blablatec.Infra.Authorize
         {
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
             new Claim(JwtRegisteredClaimNames.UniqueName, user.Ra),
-            new Claim("Data", ToJson(user))
+            new Claim("Data", ToJson(user)),
+            new Claim(ClaimTypes.Name, user.Ra.ToString()),
+            new Claim("Ra", user.Ra.ToString()),
+            new Claim("Id", user.Id.ToString()),
         };
 
             if (carroMotorista != null)
                 claims.Add(new Claim(ClaimTypes.Role, "Motorista"));
 
-                var notBefore = DateTime.UtcNow;
-                var expires = DateTime.UtcNow + TimeSpan.FromSeconds(60000);
+            var notBefore = DateTime.UtcNow;
+            var expires = DateTime.UtcNow + TimeSpan.FromSeconds(60000);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Name, user.Ra.ToString()),
-                    new Claim("Ra", user.Ra.ToString()),
-                    new Claim("Id", user.Id.ToString()),
-                    new Claim(ClaimTypes.Role, "Login")
-                }), 
+                Subject = new ClaimsIdentity(claims),
                 NotBefore = notBefore,
                 Expires = expires,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
-            
+
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
             var result = new AuthenticationResult

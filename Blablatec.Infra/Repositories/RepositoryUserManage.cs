@@ -53,7 +53,7 @@ namespace Blablatec.Infra.Repositories
             var _user = Save(currentUser);
 
             if (user.Motorista)
-                RegistrarCarroAoMotorista(user, 5);
+                RegistrarCarroAoMotorista(user, _user.Id);
 
             return new BaseResult<Usuario> { Success = true, Data = _user, Message = "Usuario criado com sucesso" };
         }
