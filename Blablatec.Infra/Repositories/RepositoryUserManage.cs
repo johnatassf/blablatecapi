@@ -127,19 +127,20 @@ namespace Blablatec.Infra.Repositories
 
         public async Task<Usuario> UpdateProfile(UpdateProfile user)
         {
-            var currentUser = _mapper.Map<Usuario>(user);
-            
-            byte[] hash, salt;
+            var id = Convert.ToInt32(_informacaoUsuario.IdUsuario);
 
-            if(user.PassWord != null) {
-                GererateHash(user.PassWord, out hash, out salt);
-                currentUser.Passwordhash = hash;
-                currentUser.Passwordsalt = salt;
-            }
-            
-            currentUser = Update(currentUser);
+            var _user = GetById(id);
 
-            return await Task.FromResult(currentUser);
+            _user.Nome = user.Name;
+            _user.Ra = user.Ra;
+            _user.Sobrenome = user.LastName;
+            _user.Email = user.Email;
+            _user.NumeroTelefone = user.Celular;
+
+
+            _user = Update(_user);
+
+            return await Task.FromResult(_user);
 
         }
 

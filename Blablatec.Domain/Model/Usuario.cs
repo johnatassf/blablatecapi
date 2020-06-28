@@ -18,7 +18,9 @@ namespace Blablatec.Domain.Model
         public string Sobrenome { get; set; }
         [Column("cd_ra_usuario")]
         public string Ra { get; set; }
-      
+        [Column("nr_telefone")]
+        public string NumeroTelefone { get; set; }
+
         [JsonIgnore]
         [Column("cd_passwordhash")]
         public byte[] Passwordhash { get; set; }
