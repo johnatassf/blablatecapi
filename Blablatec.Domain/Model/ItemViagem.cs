@@ -20,5 +20,13 @@ namespace Blablatec.Domain.Model
         public DateTime Viagem { get; set; }
         [Column("dt_finalizacao")]
         public DateTime Finalizacao { get; set; }
+        [Column("id_viagem")]
+        public int IdViagem { get; set; }
+        
+        [ForeignKey("IdViagem")]
+        public Viagem Viagemm { get; set; }
+
+       
+
     }
 }

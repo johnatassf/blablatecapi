@@ -43,16 +43,15 @@ namespace Blablatec.Controllers
             return Ok(viagem);
         }
 
-        [HttpGet("ativas/motorista/{idMotorista}")]
-        public async Task<IActionResult> GetRotasAtivasPorMotorista([FromRoute] decimal idMotorista)
+        [HttpGet("andamento")]
+        public async Task<IActionResult> GetRotasAtivasPorUsuarioLogado()
         {
-            var viagem = await _repositoryRotaAtiva.GetOne(u => u.Viagem.IdMotorista == idMotorista 
-            && u.Viagem.Finalizacao == null);
+            //var viagem = await _repositoryRotaAtiva.GetEntityByExpression(r => r.ItemViagem.IdMotorista == _idUser || r.);
 
-            if (viagem == null)
-                return NotFound("Nenhuma viagem ativa para este morista foi encotrada");
+            //if (viagem == null)
+            //    return NotFound("Nenhuma viagem ativa para este morista foi encotrada");
 
-            return Ok(viagem);
+            return Ok();
         }
 
         [HttpPost("viagem/{id}")]
