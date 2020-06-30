@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Blablatec.Domain.Model
 {
-    [Table("rotasAtivas")]
+    [Table("rotaAtiva")]
     public class RotaAtiva : IEntity
     {
         [Column("id_rotas_ativas")]
@@ -18,10 +18,10 @@ namespace Blablatec.Domain.Model
         [Column("cd_longitude_atual")]
         public string LongitudeAtual { get; set; }
        
-        [Column("id_item_viagem")] 
-        public int IdItemViagem { get; set; }
+        [Column("id_viagem")] 
+        public int IdViagem { get; set; }
        
-        [ForeignKey("IdItemViagem")]
-        public ItemViagem? ItemViagem { get; set; }
+        [ForeignKey("IdViagem")]
+        public Viagem Viagem { get; set; }
     }
 }

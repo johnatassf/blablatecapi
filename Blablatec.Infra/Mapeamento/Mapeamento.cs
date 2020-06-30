@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Blablatec.Infra.Mapeamento
 {
-    public class Mapeamento: Profile
+    public class Mapeamento : Profile
     {
         public Mapeamento()
         {
@@ -24,6 +24,10 @@ namespace Blablatec.Infra.Mapeamento
 
             CreateMap<Viagem, ViagemDtoSaida>();
 
+            CreateMap<RotaAtiva, RotaAtivaDtoSaida>()
+                .ForMember(dest => dest.Id, config => config.MapFrom(source => source.Id))
+                .ForMember(dest => dest.LatitudeAtual, config => config.MapFrom(source => source.LatitudeAtual))
+                .ForMember(dest => dest.LongitudeAtual, config => config.MapFrom(source => source.LongitudeAtual));
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Blablatec.Domain.Dto;
+﻿using AutoMapper;
+using Blablatec.Domain.Dto;
 using Blablatec.Domain.Model;
 using Blablatec.Infra.Repositories;
 using Blablatec.Infra.Services;
@@ -15,13 +16,18 @@ namespace Blablatec.Controllers
     {
         private readonly IRepository<RotaAtiva> _repositoryRotaAtiva;
         private readonly int _idUser;
-        private readonly IRepository<ItemViagem> _repositoryItemViagem;
+        private readonly IMapper _mapper;
+        private readonly IRepository<Viagem> _repositoryViagem;
         public RotaAtivaController(
          IRepository<RotaAtiva> repositoryRotaAtiva,
-         IServiceInformationUser servicoInformacaoUsuario)
+         IServiceInformationUser servicoInformacaoUsuario,
+         IRepository<Viagem> repositoryViagem,
+        IMapper mapper)
         {
             _repositoryRotaAtiva = repositoryRotaAtiva;
             _idUser = Convert.ToInt32(servicoInformacaoUsuario.IdUsuario);
+            _mapper = mapper;
+            _repositoryViagem = repositoryViagem;
         }
 
         [HttpGet]
@@ -43,48 +49,47 @@ namespace Blablatec.Controllers
             return Ok(viagem);
         }
 
-        [HttpGet("andamento")]
-        public async Task<IActionResult> GetRotasAtivasPorUsuarioLogado()
+        [HttpGet("ativa")]
+        public IActionResult GetRotasAtivasPorUsuarioLogado()
         {
-            //var viagem = await _repositoryRotaAtiva.GetEntityByExpression(r =>
-            //    r.ItemViagem.IdMotorista == _idUser 
-            // || r.ItemViagem.Viagemm.);
+            var rotaAtiva =  _repositoryRotaAtiva.GetEntityByExpression(r =>
+                r.Viagem.IdMotorista == _idUser 
+             || r.Viagem.ItensViagens.Where(v=> v.IdUsuarioCarona == _idUser).Any()
+             && r.Viagem.Finalizacao == null, r => r.Viagem, it => it.Viagem.ItensViagens);
 
-            //if (viagem == null)
-            //    return NotFound("Nenhuma viagem ativa para este morista foi encotrada");
+            var rotaAtivaMapped = _mapper.Map<List<RotaAtivaDtoSaida>>(rotaAtiva);
 
-            return Ok();
+            return Ok(rotaAtivaMapped);
         }
 
-        [HttpPost("viagem/{id}")]
-        public async Task<IActionResult> CriarViagem([FromBody] RotaAtivaDtoEntrada rota, [FromQuery] int id)
+        [HttpPost("ativa/{id}")]
+        public IActionResult CriarRotaEmAndamento([FromBody] RotaAtivaDtoEntrada rota, [FromQuery] int id)
         {
-            var viagem = _repositoryItemViagem.GetById(id);
+            var viagem = _repositoryViagem.GetById(id);
 
             if (viagem == null)
                 return NotFound("Viagem não encontrada");
 
-            //if(viagem.Finalizacao != null)
-            //    return BadRequest($"Viagem {viagem.Id} já foi finalizada");
+            if (viagem.Finalizacao != null)
+                return BadRequest($"Viagem {viagem.Id} já foi finalizada");
 
-            var rotasEmAndamento = _repositoryRotaAtiva.GetOne(r => r.IdItemViagem == viagem.Id );
-            
-            if(rotasEmAndamento != null)
-                return BadRequest($"Viagem {viagem.Id} já obtem uma rota em andamento");
+            var rotasEmAndamento = _repositoryRotaAtiva.GetOne(r => r.IdViagem == viagem.Id);
 
-            //if (viagem.IdMotorista == _idUser)
-            //    return BadRequest("Motorista logado não condiz com a viagem selecionada");
-            
+            if (rotasEmAndamento != null)
+                return BadRequest($"Viagem {viagem.Id} já obtem\\obteve uma rota em andamento");
+
+            if (viagem.IdMotorista == _idUser)
+                return BadRequest("Motorista logado não condiz com a viagem selecionada");
+
             var rotaAtiva = new RotaAtiva
             {
-                IdItemViagem = viagem.Id,
+                IdViagem = viagem.Id,
                 LatitudeAtual = rota.LatitudeAtual,
                 LongitudeAtual = rota.LongitudeAtual
             };
-           
 
             rotaAtiva = _repositoryRotaAtiva.Save(rotaAtiva);
-          
+
             return Created(nameof(GetById), viagem);
         }
     }
