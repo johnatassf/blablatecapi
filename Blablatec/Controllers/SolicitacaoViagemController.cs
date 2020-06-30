@@ -2,6 +2,7 @@
 using Blablatec.Infra.Repositories;
 using Blablatec.Infra.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -18,17 +19,20 @@ namespace Blablatec.Controllers
     {
         private readonly ILogger<SolicitacaoViagemController> _logger;
         private readonly IRepository<SolicitacaoViagem> _repositorySolicitacaoViagem;
+        private readonly IRepository<ItemViagem> _repositoryItemViagem;
         private readonly IRepository<Viagem> _repositoryViagem;
         private readonly int _idUsuarioLogado;
         private readonly IServiceInformationUser _serviceInformationUser;
 
         public SolicitacaoViagemController(ILogger<SolicitacaoViagemController> logger,
             IRepository<SolicitacaoViagem> repositorySolicitacaoViagem,
+            IRepository<ItemViagem> repositoryItemViagem,
             IRepository<Viagem> repositoryViagem,
             IServiceInformationUser serviceInformationUser)
         {
             _logger = logger;
             _repositorySolicitacaoViagem = repositorySolicitacaoViagem;
+            _repositoryItemViagem = repositoryItemViagem;
             _repositoryViagem = repositoryViagem;
             _idUsuarioLogado = Convert.ToInt32(serviceInformationUser.IdUsuario);
             _serviceInformationUser = serviceInformationUser;
@@ -95,6 +99,27 @@ namespace Blablatec.Controllers
             _repositorySolicitacaoViagem.Remove(solicitacao);
             
             return NoContent();
+        }
+
+        [HttpPut("{id}/profile")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] SolicitacaoViagem solicitacao)
+        {
+            if (solicitacao.Id != id)
+                return StatusCode(StatusCodes.Status409Conflict,
+                  $"Id do usuario divergente do id informado");
+
+            _repositorySolicitacaoViagem.Update(solicitacao);
+
+            if (solicitacao.Recusada == false)
+            {
+                ItemViagem itemViagem = new ItemViagem();
+                itemViagem.IdViagem = solicitacao.IdViagem;
+                itemViagem.IdUsuarioCarona = solicitacao.IdUsuario;
+
+                _repositoryItemViagem.Save(itemViagem);
+            }
+
+            return Ok(solicitacao);
         }
     }
 }
