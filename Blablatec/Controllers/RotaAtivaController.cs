@@ -46,7 +46,9 @@ namespace Blablatec.Controllers
         [HttpGet("andamento")]
         public async Task<IActionResult> GetRotasAtivasPorUsuarioLogado()
         {
-            //var viagem = await _repositoryRotaAtiva.GetEntityByExpression(r => r.ItemViagem.IdMotorista == _idUser || r.);
+            //var viagem = await _repositoryRotaAtiva.GetEntityByExpression(r =>
+            //    r.ItemViagem.IdMotorista == _idUser 
+            // || r.ItemViagem.Viagemm.);
 
             //if (viagem == null)
             //    return NotFound("Nenhuma viagem ativa para este morista foi encotrada");
@@ -62,16 +64,16 @@ namespace Blablatec.Controllers
             if (viagem == null)
                 return NotFound("Viagem não encontrada");
 
-            if(viagem.Finalizacao != null)
-                return BadRequest($"Viagem {viagem.Id} já foi finalizada");
+            //if(viagem.Finalizacao != null)
+            //    return BadRequest($"Viagem {viagem.Id} já foi finalizada");
 
             var rotasEmAndamento = _repositoryRotaAtiva.GetOne(r => r.IdItemViagem == viagem.Id );
             
             if(rotasEmAndamento != null)
                 return BadRequest($"Viagem {viagem.Id} já obtem uma rota em andamento");
 
-            if (viagem.IdMotorista == _idUser)
-                return BadRequest("Motorista logado não condiz com a viagem selecionada");
+            //if (viagem.IdMotorista == _idUser)
+            //    return BadRequest("Motorista logado não condiz com a viagem selecionada");
             
             var rotaAtiva = new RotaAtiva
             {
