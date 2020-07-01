@@ -21,5 +21,8 @@ namespace Blablatec.Domain.Model
         public int IdViagem { get; set; }
         [ForeignKey("IdViagem")]
         public Viagem Viagem { get; set; }
+
+        [Column("recusada")]
+        public bool? Recusada { get; set; }
     }
 }
