@@ -20,6 +20,8 @@ namespace Blablatec.Domain.Model
         public string Ra { get; set; }
         [Column("nr_telefone")]
         public string NumeroTelefone { get; set; }
+        [Column("encerrada")]
+        public bool Encerrada { get; set; }
 
         [JsonIgnore]
         [Column("cd_passwordhash")]
