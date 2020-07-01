@@ -63,7 +63,7 @@ namespace Blablatec.Controllers
         }
 
         [HttpPost("ativa/{id}")]
-        public IActionResult CriarRotaEmAndamento([FromBody] RotaAtivaDtoEntrada rota, [FromQuery] int id)
+        public async Task<IActionResult>CriarRotaEmAndamento([FromBody] RotaAtivaDtoEntrada rota, int id)
         {
             var viagem = _repositoryViagem.GetById(id);
 
@@ -73,12 +73,12 @@ namespace Blablatec.Controllers
             if (viagem.Finalizacao != null)
                 return BadRequest($"Viagem {viagem.Id} já foi finalizada");
 
-            var rotasEmAndamento = _repositoryRotaAtiva.GetOne(r => r.IdViagem == viagem.Id);
+            var rotasEmAndamento = await _repositoryRotaAtiva.GetOne(r => r.IdViagem == viagem.Id);
 
             if (rotasEmAndamento != null)
                 return BadRequest($"Viagem {viagem.Id} já obtem\\obteve uma rota em andamento");
 
-            if (viagem.IdMotorista == _idUser)
+            if (viagem.IdMotorista != _idUser)
                 return BadRequest("Motorista logado não condiz com a viagem selecionada");
 
             var rotaAtiva = new RotaAtiva
@@ -91,6 +91,26 @@ namespace Blablatec.Controllers
             rotaAtiva = _repositoryRotaAtiva.Save(rotaAtiva);
 
             return Created(nameof(GetById), viagem);
+        }
+
+        [HttpDelete("ativa/{id}")]
+        public IActionResult FinalizarCorridaEmAndamento(int id)
+        {
+            var rotaAtiva = _repositoryRotaAtiva.GetEntityByExpression(r =>
+               r.Viagem.IdMotorista == _idUser
+            || r.Viagem.ItensViagens.Where(v => v.IdUsuarioCarona == _idUser).Any()
+            && r.Viagem.Finalizacao == null
+            && r.Viagem.Id == id, r => r.Viagem, it => it.Viagem.ItensViagens).FirstOrDefault();
+
+
+            if (rotaAtiva.Viagem != null)
+            {
+                rotaAtiva.Viagem.Finalizacao = DateTime.Now;
+                _repositoryViagem.Update(rotaAtiva.Viagem);
+            }
+                
+
+            return NoContent();
         }
     }
 }
