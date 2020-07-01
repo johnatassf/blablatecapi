@@ -67,7 +67,7 @@ namespace Blablatec.Infra.Repositories
                 Cor = user.CorCarro,
                 Marca = user.Modelo,
                 Placa = user.Placa,
-                QuantidadeLugares = user.QtsLugares,
+                QuantidadeLugares = Convert.ToInt32(user.QtsLugares),
                 IdMotorista = idUsuarioRegistrado
             };
 
