@@ -48,7 +48,7 @@ namespace Blablatec.Infra.Authorize
             new Claim("Id", user.Id.ToString()),
         };
 
-            if (carroMotorista != null)
+            if (carroMotorista.Any())
                 claims.Add(new Claim(ClaimTypes.Role, "Motorista"));
 
             var notBefore = DateTime.UtcNow;
