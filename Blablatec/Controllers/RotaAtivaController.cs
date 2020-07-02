@@ -58,13 +58,13 @@ namespace Blablatec.Controllers
              && r.Viagem.Finalizacao == null, it => it.Viagem.ItensViagens)
                 .FirstOrDefault();
 
+            if (rotaAtiva == null)
+                return BadRequest("Nenhuma rota ativa encontrada");
+
             var rotaAtivaMapped = _mapper.Map<RotaAtivaDtoSaida>(rotaAtiva);
             rotaAtivaMapped.IdUsuarioLogado = _idUser;
             rotaAtivaMapped.IsMotorista = _idUser == rotaAtivaMapped.idMotorista;
           
-            if (rotaAtiva == null)
-                return BadRequest("Nenhuma rota ativa encontrada");
-
             return Ok(rotaAtivaMapped);
         }
 
