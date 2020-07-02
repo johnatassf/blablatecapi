@@ -37,7 +37,7 @@ namespace Blablatec.Infra.Repositories
         public BaseResult<Usuario> RegisterUser(RegistroUsuarioDto user)
         {
             if (GetAll(u => u.Ra.Equals(user.Ra)).Any())
-                return new BaseResult<Usuario> { Success = false, Message = "Ra cadastrado" };
+                return new BaseResult<Usuario> { Success = false, Message = "O RA informado já está cadastrado." };
             
             if (GetAll(u => u.Email.Equals(user.Email)).Any())
                 return new BaseResult<Usuario> { Success = false, Message = "E-mail cadastrado cadastrado" };
