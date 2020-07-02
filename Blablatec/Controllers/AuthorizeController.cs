@@ -40,14 +40,14 @@ namespace Blablatec.Controllers
 
             if (user == null)
             {
-                return BadRequest(new BaseResult<Object> { Message = "401 - Não autorizado", Success = false });
+                return BadRequest(new BaseResult<Object> { Message = "Usuario ou senha inválidos", Success = false });
             }
 
             var authentication = _serviceAuthentication.Authenticate(user);
 
             if (!authentication.Success)
             {
-                return BadRequest(new BaseResult<Object> {Message = "401 - Não autorizado", Success= false });
+                return BadRequest(new BaseResult<Object> {Message = "Usuário ou senha inválidos", Success= false });
             }
 
             return Ok(authentication);
