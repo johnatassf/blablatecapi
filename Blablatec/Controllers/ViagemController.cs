@@ -51,6 +51,14 @@ namespace Blablatec.Controllers
             return Ok(viagems);
         }
 
+        [HttpGet("minhas-viagens")]
+        public IActionResult GetMinhasViagens()
+        {
+            var viagems = _repositoryViagem.GetAll().Where(p => p.IdMotorista == _idUsuarioLogado);
+
+            return Ok(viagems);
+        }
+
         [HttpGet("{id}")]
         public IActionResult GetById([FromRoute] int id)
         {

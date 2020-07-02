@@ -38,10 +38,10 @@ namespace Blablatec.Controllers
             _serviceInformationUser = serviceInformationUser;
         }
 
-        [HttpGet]
-        public IActionResult GetAll()
+        [HttpGet("getAll/{idViagem}")]
+        public IActionResult GetAll([FromRoute] int idViagem)
         {
-            var carros = _repositorySolicitacaoViagem.GetEntityByExpression(null, v=> v.Viagem, v => v.Carona );
+            var carros = _repositorySolicitacaoViagem.GetEntityByExpression(null, v=> v.Viagem, v => v.Carona ).Where(p => p.Viagem.Id == idViagem && p.Recusada == null);
 
             return Ok(carros);
         }
