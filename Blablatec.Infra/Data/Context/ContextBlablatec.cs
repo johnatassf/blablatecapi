@@ -18,7 +18,7 @@ namespace Blablatec.Infra
         DbSet<ItemViagem> ItemViagems { get; set; }
         DbSet<Viagem> Viagens { get; set; }
         DbSet<Carro> Carros { get; set; }
-        DbSet<solicitacaoViagem> solicitacaoViagems { get; set; }
+        DbSet<SolicitacaoViagem> solicitacaoViagems { get; set; }
         DbSet<RotaAtiva> RotasAtivas { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

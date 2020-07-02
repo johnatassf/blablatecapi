@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Blablatec.Infra.Repositories
 {
-    public class IRepositorioSolicitacaoViagem<T> : BaseRepository<solicitacaoViagem>, IRepository<solicitacaoViagem>
+    public class IRepositorioSolicitacaoViagem<T> : BaseRepository<SolicitacaoViagem>, IRepository<SolicitacaoViagem>
     {
 
         public IRepositorioSolicitacaoViagem(ContextBlablatec contexto) : base(contexto)
@@ -13,7 +13,7 @@ namespace Blablatec.Infra.Repositories
 
         }
 
-        public solicitacaoViagem Save(solicitacaoViagem itemViagem)
+        public SolicitacaoViagem Save(SolicitacaoViagem itemViagem)
         {
             //Fazer validações da viagem 
             return itemViagem;
