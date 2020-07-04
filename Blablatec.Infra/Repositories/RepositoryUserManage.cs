@@ -135,7 +135,7 @@ namespace Blablatec.Infra.Repositories
             _user.Ra = user.Ra;
             _user.Sobrenome = user.LastName;
             _user.Email = user.Email;
-            _user.NumeroTelefone = user.Celular;
+            _user.NumeroTelefone = user.NumeroTelefone;
 
 
             _user = Update(_user);

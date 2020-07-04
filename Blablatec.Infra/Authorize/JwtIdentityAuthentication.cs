@@ -51,8 +51,8 @@ namespace Blablatec.Infra.Authorize
             if (carroMotorista.Any())
                 claims.Add(new Claim(ClaimTypes.Role, "Motorista"));
 
-            var notBefore = DateTime.UtcNow;
-            var expires = DateTime.UtcNow + TimeSpan.FromSeconds(60000);
+            var notBefore = DateTime.Now;
+            var expires = DateTime.Now + TimeSpan.FromSeconds(60000);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {

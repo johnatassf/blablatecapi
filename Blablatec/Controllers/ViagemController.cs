@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Blablatec.Controllers
 {
+  
     [ApiController]
     [Route("viagens")]
     public class ViagemController : Controller
@@ -54,7 +55,7 @@ namespace Blablatec.Controllers
         [HttpGet("minhas-viagens")]
         public IActionResult GetMinhasViagens()
         {
-            var viagems = _repositoryViagem.GetAll().Where(p => p.IdMotorista == _idUsuarioLogado);
+            var viagems = _repositoryViagem.GetEntityByExpression(p => p.IdMotorista == _idUsuarioLogado, v => v.Motorista);
 
             return Ok(viagems);
         }
@@ -101,8 +102,9 @@ namespace Blablatec.Controllers
         {
             var motorista = _repositoryUser.GetById(_idUsuarioLogado);
 
-            if (motorista == null)
+            if(motorista == null)
                 return BadRequest("Motorista não encontrado");
+
             var viagem = _mapper.Map<Viagem>(viagemEntrada);
             viagem.IdMotorista = motorista.Id;
             viagem = _repositoryViagem.Save(viagem);

@@ -26,10 +26,10 @@ namespace Blablatec.Infra.Mapeamento
 
             CreateMap<RotaAtiva, RotaAtivaDtoSaida>()
                 .ForMember(dest => dest.Id, config => config.MapFrom(source => source.Id))
-                .ForMember(dest => dest.LatitudeAtual, config => config.MapFrom(source => source.LatitudeAtual))
-                .ForMember(dest => dest.LongitudeAtual, config => config.MapFrom(source => source.LongitudeAtual))
+                .ForMember(dest => dest.LatLng, config => config.MapFrom(source => source.LatLng))
                 .ForMember(dest => dest.idMotorista, config => config.MapFrom(source => source.Viagem.IdMotorista))
-                .ForMember(dest => dest.PontoFinal, config => config.MapFrom(source => source.Viagem.PontoFinal));
+                .ForMember(dest => dest.PontoFinal, config => config.MapFrom(source => source.Viagem.PontoFinal))
+                 .ForMember(dest => dest.IdViagem, config => config.MapFrom(source => source.Viagem.Id));
 
         }
     }

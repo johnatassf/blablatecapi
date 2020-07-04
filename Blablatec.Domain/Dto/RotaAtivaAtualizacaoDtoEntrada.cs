@@ -4,9 +4,10 @@ using System.Text;
 
 namespace Blablatec.Domain.Dto
 {
-    public class RotaAtivaDtoEntrada
+    public class RotaAtivaAtualizacaoDtoEntrada
     {
         public int Id { get; set; }
-        public string LatLng { get; set; }
+        public string LatitudeAtual { get; set; }
+        public string LongitudeAtual { get; set; }
     }
 }

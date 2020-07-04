@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Blablatec.Controllers
 {
-
+    [Authorize]
     [ApiController]
     [Route("solicitacao-viagem")]
     public class SolicitacaoViagemController : ControllerBase
@@ -41,7 +41,7 @@ namespace Blablatec.Controllers
         [HttpGet("getAll/{idViagem}")]
         public IActionResult GetAll([FromRoute] int idViagem)
         {
-            var carros = _repositorySolicitacaoViagem.GetEntityByExpression(null, v=> v.Viagem, v => v.Carona ).Where(p => p.Viagem.Id == idViagem && p.Recusada == null);
+            var carros = _repositorySolicitacaoViagem.GetEntityByExpression(p => p.Viagem.Id == idViagem && p.Recusada == null, v=> v.Viagem, v => v.Carona );
 
             return Ok(carros);
         }
@@ -55,7 +55,6 @@ namespace Blablatec.Controllers
         }
 
   
-        [Authorize]
         [HttpPost("viagem/{idViagem}")]
         public IActionResult CriarSolicitacaoViagem([FromRoute]int idViagem)
         {

@@ -10,7 +10,7 @@ namespace Blablatec.Domain.Dto
         public string Email { get; set; }
         public string Name { get; set; }
         public string LastName { get; set; }
-        public string Celular { get; set; }
+        public string NumeroTelefone { get; set; }
         public string Ra { get; set; }
 
     }
