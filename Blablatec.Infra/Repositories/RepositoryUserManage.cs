@@ -79,7 +79,10 @@ namespace Blablatec.Infra.Repositories
             var user = GetAll(u => u.Ra == loginUser.Ra).FirstOrDefault();
             if (user == null)
                 return null;
-            
+
+            if (GetAll(u => u.Encerrada == true).Any())
+                return null;
+
             if (ValidateHash(loginUser.Password, user.Passwordhash, user.Passwordsalt))
                 return user;
 
