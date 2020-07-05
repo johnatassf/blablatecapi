@@ -69,7 +69,7 @@ namespace Blablatec.Controllers
         }
 
         [HttpPost("ativa/{idViagem}")]
-        public async Task<IActionResult>CriarRotaEmAndamento([FromBody] RotaAtivaDtoEntrada rota, int idViagem)
+        public async Task<IActionResult>CriarRotaEmAndamento(int idViagem)
         {
             var viagem = _repositoryViagem.GetById(idViagem);
 
@@ -77,21 +77,27 @@ namespace Blablatec.Controllers
                 return NotFound("Viagem não encontrada");
 
             if (viagem.Finalizacao != null)
-                return BadRequest($"Viagem {viagem.Id} já foi finalizada");
+                return BadRequest($"Viagem informada já finalizada");
 
             var rotaEmAndamento = await _repositoryRotaAtiva.GetOne(r => r.IdViagem == viagem.Id);
 
             if (rotaEmAndamento != null)
-                return BadRequest($"Viagem {viagem.Id} já obtem\\obteve uma rota em andamento");
+                return BadRequest($"Está viagem ja possui uma rota em andamento");
 
             if (viagem.IdMotorista != _idUser)
                 return BadRequest("Motorista logado não condiz com a viagem selecionada");
 
-            rotaEmAndamento.LatLng = rota.LatLng;
+            if (viagem.IdMotorista != _idUser)
+                return BadRequest("Motorista logado não condiz com a viagem selecionada");
 
-            var rotaAtiva = _repositoryRotaAtiva.Save(rotaEmAndamento);
-            
-            return Created(nameof(GetById), viagem);
+            var existRodaEmAndamento = _repositoryRotaAtiva.GetEntityByExpression(r => r.Viagem.IdMotorista == _idUser 
+            && r.Viagem.Finalizacao != null 
+            && r.IdViagem == idViagem,
+            v=> v.Viagem).Any();
+            if (existRodaEmAndamento)
+                return BadRequest("Motorista ja possui um rota em andamento");
+
+            return Created(nameof(GetById), _repositoryRotaAtiva.Save(new RotaAtiva() { IdViagem = viagem.Id }));
         }
 
         [HttpPut("ativa/{idViagem}")]
