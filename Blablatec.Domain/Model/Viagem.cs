@@ -34,5 +34,6 @@ namespace Blablatec.Domain.Model
         [ForeignKey("IdMotorista")]
         public Usuario Motorista { get; set; }
         public List<ItemViagem> ItensViagens { get; set; }
+
     }
 }

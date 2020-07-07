@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Blablatec.Domain.Dto;
 using Blablatec.Domain.Model;
+using Blablatec.Infra.Authorize;
 using Blablatec.Infra.Repositories;
 using Blablatec.Infra.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -56,16 +57,16 @@ namespace Blablatec.Controllers
                 r.Viagem.IdMotorista == _idUser 
              || r.Viagem.ItensViagens.Where(v=> v.IdUsuarioCarona == _idUser).Any()
              && r.Viagem.Finalizacao == null, it => it.Viagem.ItensViagens)
-                .FirstOrDefault();
+                .FirstOrDefault();  
 
             if (rotaAtiva == null)
-                return BadRequest("Nenhuma rota ativa encontrada");
+                return Ok(new BaseResult<object>() { Message = "Nenhuma rota ativa encontrada", Success = false });
 
             var rotaAtivaMapped = _mapper.Map<RotaAtivaDtoSaida>(rotaAtiva);
             rotaAtivaMapped.IdUsuarioLogado = _idUser;
             rotaAtivaMapped.IsMotorista = _idUser == rotaAtivaMapped.idMotorista;
           
-            return Ok(rotaAtivaMapped);
+             return Ok(new BaseResult<RotaAtivaDtoSaida>() { Message = "Nenhuma rota ativa encontrada", Success = true, Data = rotaAtivaMapped });
         }
 
         [HttpPost("ativa/{idViagem}")]
@@ -91,9 +92,9 @@ namespace Blablatec.Controllers
                 return BadRequest("Motorista logado não condiz com a viagem selecionada");
 
             var existRodaEmAndamento = _repositoryRotaAtiva.GetEntityByExpression(r => r.Viagem.IdMotorista == _idUser 
-            && r.Viagem.Finalizacao != null 
-            && r.IdViagem == idViagem,
+            && r.Viagem.Finalizacao == null, 
             v=> v.Viagem).Any();
+
             if (existRodaEmAndamento)
                 return BadRequest("Motorista ja possui um rota em andamento");
 
