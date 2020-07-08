@@ -35,5 +35,7 @@ namespace Blablatec.Domain.Model
         public Usuario Motorista { get; set; }
         public List<ItemViagem> ItensViagens { get; set; }
 
+        public virtual ICollection<SolicitacaoViagem> SolicitacaoViagems { get; set; }
+
     }
 }

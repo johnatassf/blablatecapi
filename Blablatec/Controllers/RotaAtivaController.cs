@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace Blablatec.Controllers
 {
     [Route("rotas")]
-    public class RotaAtivaController: ControllerBase
+    public class RotaAtivaController : ControllerBase
     {
         private readonly IRepository<RotaAtiva> _repositoryRotaAtiva;
         private readonly int _idUser;
@@ -53,11 +53,10 @@ namespace Blablatec.Controllers
         [HttpGet("ativa")]
         public IActionResult GetRotasAtivasPorUsuarioLogado()
         {
-            var rotaAtiva =  _repositoryRotaAtiva.GetEntityByExpression(r =>
-                r.Viagem.IdMotorista == _idUser 
-             || r.Viagem.ItensViagens.Where(v=> v.IdUsuarioCarona == _idUser).Any()
-             && r.Viagem.Finalizacao == null, it => it.Viagem.ItensViagens)
-                .FirstOrDefault();  
+            var rotaAtiva = _repositoryRotaAtiva.GetEntityByExpression(r =>
+               (r.Viagem.IdMotorista == _idUser || r.Viagem.ItensViagens.Where(v => v.IdUsuarioCarona == _idUser).Any())
+            && r.Viagem.Finalizacao == null, it => it.Viagem.ItensViagens)
+                .FirstOrDefault();
 
             if (rotaAtiva == null)
                 return Ok(new BaseResult<object>() { Message = "Nenhuma rota ativa encontrada", Success = false });
@@ -65,12 +64,12 @@ namespace Blablatec.Controllers
             var rotaAtivaMapped = _mapper.Map<RotaAtivaDtoSaida>(rotaAtiva);
             rotaAtivaMapped.IdUsuarioLogado = _idUser;
             rotaAtivaMapped.IsMotorista = _idUser == rotaAtivaMapped.idMotorista;
-          
-             return Ok(new BaseResult<RotaAtivaDtoSaida>() { Message = "Nenhuma rota ativa encontrada", Success = true, Data = rotaAtivaMapped });
+
+            return Ok(new BaseResult<RotaAtivaDtoSaida>() { Message = "Nenhuma rota ativa encontrada", Success = true, Data = rotaAtivaMapped });
         }
 
         [HttpPost("ativa/{idViagem}")]
-        public async Task<IActionResult>CriarRotaEmAndamento(int idViagem)
+        public async Task<IActionResult> CriarRotaEmAndamento(int idViagem)
         {
             var viagem = _repositoryViagem.GetById(idViagem);
 
@@ -91,9 +90,9 @@ namespace Blablatec.Controllers
             if (viagem.IdMotorista != _idUser)
                 return BadRequest("Motorista logado não condiz com a viagem selecionada");
 
-            var existRodaEmAndamento = _repositoryRotaAtiva.GetEntityByExpression(r => r.Viagem.IdMotorista == _idUser 
-            && r.Viagem.Finalizacao == null, 
-            v=> v.Viagem).Any();
+            var existRodaEmAndamento = _repositoryRotaAtiva.GetEntityByExpression(r => r.Viagem.IdMotorista == _idUser
+            && r.Viagem.Finalizacao == null,
+            v => v.Viagem).Any();
 
             if (existRodaEmAndamento)
                 return BadRequest("Motorista ja possui um rota em andamento");
@@ -118,29 +117,37 @@ namespace Blablatec.Controllers
             var rotaEmAndamento = await _repositoryRotaAtiva.GetOne(r => r.IdViagem == viagem.Id && rota.Id == r.Id);
 
             rotaEmAndamento.LatLng = rota.LatLng;
-           
+
             _repositoryRotaAtiva.Save(rotaEmAndamento);
 
             return NoContent();
         }
 
 
-        [HttpDelete("ativa/{id}")]
-        public IActionResult FinalizarCorridaEmAndamento(int id)
+        [HttpPost("ativa/{idViagem}/finalizar")]
+        public async Task<IActionResult> FinalizarCorridaEmAndamento([FromBody] RotaAtivaDtoEntrada rota, int idViagem)
         {
-            var rotaAtiva = _repositoryRotaAtiva.GetEntityByExpression(r =>
-               r.Viagem.IdMotorista == _idUser
-            || r.Viagem.ItensViagens.Where(v => v.IdUsuarioCarona == _idUser).Any()
-            && r.Viagem.Finalizacao == null
-            && r.Viagem.Id == id, r => r.Viagem, it => it.Viagem.ItensViagens).FirstOrDefault();
+            var viagem = _repositoryViagem.GetById(idViagem);
+
+            if (viagem == null)
+                return NotFound("Viagem não encontrada");
+
+            if (viagem.Finalizacao != null)
+                return BadRequest($"Viagem {viagem.Id} já foi finalizada");
+
+            if (viagem.IdMotorista != _idUser)
+                return BadRequest("Motorista logado não condiz com a viagem selecionada");
+
+            var rotaEmAndamento = await _repositoryRotaAtiva.GetOne(r => r.IdViagem == viagem.Id && rota.Id == r.Id);
+
+            rotaEmAndamento.LatLng = rota.LatLng;
+
+            _repositoryRotaAtiva.Update(rotaEmAndamento);
 
 
-            if (rotaAtiva.Viagem != null)
-            {
-                rotaAtiva.Viagem.Finalizacao = DateTime.Now;
-                _repositoryViagem.Update(rotaAtiva.Viagem);
-            }
-                
+            viagem.Finalizacao = DateTime.Now;
+            _repositoryViagem.Update(viagem);
+
 
             return NoContent();
         }

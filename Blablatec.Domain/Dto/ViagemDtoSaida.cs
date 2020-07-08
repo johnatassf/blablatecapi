@@ -27,6 +27,8 @@ namespace Blablatec.Domain.Dto
         public Usuario Motorista { get; set; }
 
         public bool MotoristaDaCorrida { get; set; }
+        public int QuantidadeDeSolicitacaoAtiva { get; set; }
         public bool JaSolicitado { get; set; }
+        public bool EmAndamento { get; set; } = false;
     }
 }

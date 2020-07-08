@@ -52,10 +52,10 @@ namespace Blablatec.Controllers
             return Ok(viagems);
         }
 
-        [HttpGet("minhas-viagens")]
-        public IActionResult GetMinhasViagens()
+        [HttpGet("minhas-viagens-oferecidas")]
+        public async Task<IActionResult> GetMinhasViagens()
         {
-            var viagems = _repositoryViagem.GetEntityByExpression(p => p.IdMotorista == _idUsuarioLogado, v => v.Motorista);
+            var viagems = await _repositoryViagem.ListarViagensOferecidas();
 
             return Ok(viagems);
         }
