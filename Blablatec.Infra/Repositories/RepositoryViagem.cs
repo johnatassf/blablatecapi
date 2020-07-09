@@ -69,7 +69,7 @@ namespace Blablatec.Infra.Repositories
             viagensDtoSaida.ForEach(viagem =>
             {
                 viagem.MotoristaDaCorrida = viagem.IdMotorista == _idUsuario;
-                viagem.QuantidadeDeSolicitacaoAtiva = viagensSolicitadas.Where(v => v.IdViagem == viagem.Id && v.Recusada == false)
+                viagem.QuantidadeDeSolicitacaoAtiva = viagensSolicitadas.Where(v => v.IdViagem == viagem.Id && (v.Recusada == false || v.Recusada == null))
                 .Count();
             });
 
