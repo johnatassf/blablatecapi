@@ -113,6 +113,20 @@ namespace Blablatec.Controllers
             return Created(nameof(GetById), viagem);
         }
 
+        [HttpDelete("{id}")]
+        public IActionResult ExcluirViagem([FromRoute] int id)
+        {
+            var viagem = _repositoryViagem.GetById(id);
+
+            if (viagem == null)
+                return NotFound("Viagem {id} não encontrada");
+
+            viagem.Cancelada = DateTime.Now;
+
+            return NoContent();
+        }
+
+
 
     }
 }

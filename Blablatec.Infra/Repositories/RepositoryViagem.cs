@@ -35,7 +35,8 @@ namespace Blablatec.Infra.Repositories
         {
             var viagens = GetEntityByExpression(v => v.Finalizacao == null
                 && v.DataViagem > DateTime.Now
-                && v.DataInicio == null, v => v.Motorista);
+                && v.DataInicio == null
+                && v.Cancelada == null, v => v.Motorista);
 
             var viagensDtoSaida = _mapper.Map<List<ViagemDtoSaida>>(viagens);
             var viagensSolicitadas = _repositorySolicitacaoViagem.GetAll();
@@ -56,7 +57,7 @@ namespace Blablatec.Infra.Repositories
 
         public async Task<List<ViagemDtoSaida>> ListarViagensOferecidas()
         {
-            var viagens = GetEntityByExpression(v => v.Finalizacao == null
+            var viagens = GetEntityByExpression(v => v.Finalizacao == null && v.Cancelada == null
                         && v.DataViagem > DateTime.Now && v.IdMotorista == _idUsuario, v => v.Motorista);
 
             var idsViagens = viagens.Select(v => v.Id).ToList();

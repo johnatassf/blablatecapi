@@ -36,5 +36,7 @@ namespace Blablatec.Domain.Model
         public List<ItemViagem> ItensViagens { get; set; }
         [Column("dt_inicio")]
         public DateTime? DataInicio { get; set; }
+        [Column("dt_cancelamento")]
+        public DateTime? Cancelada { get; set; }
     }
 }
