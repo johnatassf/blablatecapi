@@ -101,7 +101,7 @@ namespace Blablatec.Controllers
         }
 
         [HttpPut("{id}/profile")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] SolicitacaoViagem solicitacao)
+        public IActionResult Update([FromRoute] int id, [FromBody] SolicitacaoViagem solicitacao)
         {
             if (solicitacao.Id != id)
                 return StatusCode(StatusCodes.Status409Conflict,
@@ -118,7 +118,7 @@ namespace Blablatec.Controllers
                 _repositoryItemViagem.Save(itemViagem);
             }
 
-            return Ok(solicitacao);
+            return NoContent();
         }
     }
 }
