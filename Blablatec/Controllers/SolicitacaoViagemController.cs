@@ -101,13 +101,13 @@ namespace Blablatec.Controllers
         }
 
         [HttpPut("{id}/profile")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] SolicitacaoViagem solicitacao)
+        public IActionResult Update([FromRoute] int id, [FromBody] SolicitacaoViagem solicitacao)
         {
             if (solicitacao.Id != id)
                 return StatusCode(StatusCodes.Status409Conflict,
                   $"Id do usuario divergente do id informado");
 
-            _repositorySolicitacaoViagem.Update(solicitacao);
+            var solic = _repositorySolicitacaoViagem.Update(solicitacao);
 
             if (solicitacao.Recusada == false)
             {
@@ -118,7 +118,7 @@ namespace Blablatec.Controllers
                 _repositoryItemViagem.Save(itemViagem);
             }
 
-            return Ok(solicitacao);
+            return Ok(solic);
         }
     }
 }

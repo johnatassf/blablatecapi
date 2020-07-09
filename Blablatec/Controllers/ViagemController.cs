@@ -22,10 +22,12 @@ namespace Blablatec.Controllers
         private readonly IMapper _mapper;
         private readonly int _idUsuarioLogado;
         private readonly IRepositoryViagem _repositoryViagem;
+        private readonly IRepository<SolicitacaoViagem> _repositorySolicitacaoViagem;
 
         public ViagemController(
             IRepository<Viagem> reposotoryViagem,
             IRepository<Usuario> repositoryUser,
+            IRepository<SolicitacaoViagem> repositorySolicitacaoViagem,
             IMapper mapper,
             IServiceInformationUser servicoInformacaoUsuario,
             IRepositoryViagem repositoryViagem)
@@ -34,6 +36,7 @@ namespace Blablatec.Controllers
             _mapper = mapper;
             _idUsuarioLogado = Convert.ToInt32(servicoInformacaoUsuario.IdUsuario);
             _repositoryViagem = repositoryViagem;
+            _repositorySolicitacaoViagem = repositorySolicitacaoViagem;
         }
 
         [HttpGet]
@@ -56,6 +59,14 @@ namespace Blablatec.Controllers
         public async Task<IActionResult> GetMinhasViagens()
         {
             var viagems = await _repositoryViagem.ListarViagensOferecidas();
+
+            return Ok(viagems);
+        }
+
+        [HttpGet("minhas-viagens-agendadas")]
+        public IActionResult GetMinhasViagensAgendadas()
+        {
+            var viagems = _repositorySolicitacaoViagem.GetEntityByExpression(p=> p.IdUsuario == _idUsuarioLogado, includes: v => v.Viagem.Motorista);
 
             return Ok(viagems);
         }
