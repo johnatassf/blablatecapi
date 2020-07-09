@@ -34,7 +34,8 @@ namespace Blablatec.Infra.Repositories
         public List<ViagemDtoSaida> ListasViagensEmAberto()
         {
             var viagens = GetEntityByExpression(v => v.Finalizacao == null
-       && v.DataViagem > DateTime.Now, v => v.Motorista);
+                && v.DataViagem > DateTime.Now
+                && v.DataInicio == null, v => v.Motorista);
 
             var viagensDtoSaida = _mapper.Map<List<ViagemDtoSaida>>(viagens);
             var viagensSolicitadas = _repositorySolicitacaoViagem.GetAll();

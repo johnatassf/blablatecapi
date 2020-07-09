@@ -97,7 +97,11 @@ namespace Blablatec.Controllers
             if (existRodaEmAndamento)
                 return BadRequest("Motorista ja possui um rota em andamento");
 
-            return Created(nameof(GetById), _repositoryRotaAtiva.Save(new RotaAtiva() { IdViagem = viagem.Id }));
+            var rotaCriada = _repositoryRotaAtiva.Save(new RotaAtiva() { IdViagem = viagem.Id });
+            viagem.DataInicio = DateTime.Now;
+            _repositoryViagem.Update(viagem);
+
+            return Created(nameof(GetById), rotaCriada);
         }
 
         [HttpPut("ativa/{idViagem}")]
@@ -118,7 +122,7 @@ namespace Blablatec.Controllers
 
             rotaEmAndamento.LatLng = rota.LatLng;
 
-            _repositoryRotaAtiva.Save(rotaEmAndamento);
+            _repositoryRotaAtiva.Update(rotaEmAndamento);
 
             return NoContent();
         }
