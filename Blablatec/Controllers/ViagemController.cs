@@ -22,10 +22,12 @@ namespace Blablatec.Controllers
         private readonly IMapper _mapper;
         private readonly int _idUsuarioLogado;
         private readonly IRepositoryViagem _repositoryViagem;
+        private readonly IRepository<SolicitacaoViagem> _repositorySolicitacaoViagem;
 
         public ViagemController(
             IRepository<Viagem> reposotoryViagem,
             IRepository<Usuario> repositoryUser,
+            IRepository<SolicitacaoViagem> repositorySolicitacaoViagem,
             IMapper mapper,
             IServiceInformationUser servicoInformacaoUsuario,
             IRepositoryViagem repositoryViagem)
@@ -34,6 +36,7 @@ namespace Blablatec.Controllers
             _mapper = mapper;
             _idUsuarioLogado = Convert.ToInt32(servicoInformacaoUsuario.IdUsuario);
             _repositoryViagem = repositoryViagem;
+            _repositorySolicitacaoViagem = repositorySolicitacaoViagem;
         }
 
         [HttpGet]
@@ -60,10 +63,18 @@ namespace Blablatec.Controllers
             return Ok(viagems);
         }
 
+        [HttpGet("minhas-viagens-agendadas")]
+        public IActionResult GetMinhasViagensAgendadas()
+        {
+            var viagems = _repositorySolicitacaoViagem.GetEntityByExpression(p=> p.IdUsuario == _idUsuarioLogado, includes: v => v.Viagem.Motorista);
+
+            return Ok(viagems);
+        }
+
         [HttpGet("{id}")]
         public IActionResult GetById([FromRoute] int id)
         {
-            var viagem = _repositoryViagem.GetAll();
+            var viagem = _repositoryViagem.GetAll().OrderByDescending(v => v.Id);
 
             if (viagem == null)
                 return NotFound("Viagem {id} não encontrada");
@@ -118,10 +129,15 @@ namespace Blablatec.Controllers
         {
             var viagem = _repositoryViagem.GetById(id);
 
+            if (viagem.Cancelada != null)
+                return BadRequest("Viagem ja cancela");
+
             if (viagem == null)
                 return NotFound("Viagem {id} não encontrada");
 
             viagem.Cancelada = DateTime.Now;
+
+            _repositoryViagem.Update(viagem);
 
             return NoContent();
         }

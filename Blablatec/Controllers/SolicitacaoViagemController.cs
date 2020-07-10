@@ -41,7 +41,9 @@ namespace Blablatec.Controllers
         [HttpGet("getAll/{idViagem}")]
         public IActionResult GetAll([FromRoute] int idViagem)
         {
-            var carros = _repositorySolicitacaoViagem.GetEntityByExpression(p => p.Viagem.Id == idViagem && p.Recusada == null, v=> v.Viagem, v => v.Carona );
+            var carros = _repositorySolicitacaoViagem
+                    .GetEntityByExpression(p => p.Viagem.Id == idViagem, v=> v.Viagem, v => v.Carona )
+                    .OrderByDescending(f => f.Recusada);
 
             return Ok(carros);
         }
@@ -107,7 +109,7 @@ namespace Blablatec.Controllers
                 return StatusCode(StatusCodes.Status409Conflict,
                   $"Id do usuario divergente do id informado");
 
-            _repositorySolicitacaoViagem.Update(solicitacao);
+            var solic = _repositorySolicitacaoViagem.Update(solicitacao);
 
             if (solicitacao.Recusada == false)
             {
