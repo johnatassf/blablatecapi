@@ -4,7 +4,7 @@
 Blablatec é um aplicativo de carona desenvolvido para atender à demanda logística de alunos do Centro Paula Souza, promovendo a conexão entre os que possuem veículo próprio e os que necessitam de condução para deslocamento entre trabalho/faculdade e casa/faculdade.
 Este projeto visa promover segurança, otimizar o tempo de deslocamento e minimizar os custos de transporte.
 
-Para o front-end do projeto, visite o repositório: [Blablatec Front-end](https://github.com/DebySilva/blablatec](https://github.com/johnatassf/blablatec-ionic).
+Para o front-end do projeto, visite o repositório: [Blablatec Front-end](https://github.com/johnatassf/blablatec-ionic).
 
 ## Funcionalidades
 - **Motorista**: Pode listar uma viagem, definir rota, preço por lugar e horário, editar e cancelar a viagem.
