@@ -13,7 +13,7 @@ Para o front-end do projeto, visite o repositório: [Blablatec Front-end](https:
 ## Tecnologias Utilizadas
 Blablatec foi construído usando várias tecnologias líderes de mercado para desenvolvimento web e móvel:
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/a/a3/.NET_Logo.svg" width="100">
+<img src="[https://upload.wikimedia.org/wikipedia/commons/a/a3/.NET_Logo.svg](https://www.google.com/url?sa=i&url=https%3A%2F%2Flogos-world.net%2Fnet-framework-logo%2F&psig=AOvVaw1GDE4rmQ8YEmSU5rfT4MQU&ust=1718660019523000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCMjJj9KJ4YYDFQAAAAAdAAAAABAJ)" width="100">
 .NET 3.1
 
 <img src="https://upload.wikimedia.org/wikipedia/commons/c/cf/Angular_full_color_logo.svg" width="100">
@@ -28,7 +28,7 @@ MySQL 5.7
 <img src="https://upload.wikimedia.org/wikipedia/commons/a/a8/Microsoft_Azure_Logo.svg" width="100">
 Serviço de Aplicação Azure & Banco de Dados do Azure para MySQL
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg" width="100">
+<img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.hiclipart.com%2Ffree-transparent-background-png-clipart-hklwh&psig=AOvVaw3oChgecdRtCfdAtffF_Oqw&ust=1718660262254000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCLij88WK4YYDFQAAAAAdAAAAABAE" width="100">
 Node.js versão 9.1.14
 
 <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" width="100">
