@@ -1,7 +1,7 @@
 # Blablatec - Carpooling App Backend
 
 ## Sobre o Projeto
-Blablatec é um aplicativo de carona desenvolvido para atender à demanda logística de alunos do Centro Paula Souza, promovendo a conexão entre os que possuem veículo próprio e os que necessitam de condução para deslocamento entre trabalho/faculdade e casa/faculdade. 
+Blablatec é um aplicativo de carona desenvolvido para atender à demanda logística de alunos do Centro Paula Souza, promovendo a conexão entre os que possuem veículo próprio e os que necessitam de condução para deslocamento entre trabalho/faculdade e casa/faculdade.
 Este projeto visa promover segurança, otimizar o tempo de deslocamento e minimizar os custos de transporte.
 
 Para o front-end do projeto, visite o repositório: [Blablatec Front-end](https://github.com/DebySilva/blablatec).
@@ -13,28 +13,28 @@ Para o front-end do projeto, visite o repositório: [Blablatec Front-end](https:
 ## Tecnologias Utilizadas
 Blablatec foi construído usando várias tecnologias líderes de mercado para desenvolvimento web e móvel:
 
-![.NET](https://upload.wikimedia.org/wikipedia/commons/a/a3/.NET_Logo.svg)  
+<img src="https://upload.wikimedia.org/wikipedia/commons/a/a3/.NET_Logo.svg" width="100">
 .NET 3.1
 
-![Angular](https://upload.wikimedia.org/wikipedia/commons/c/cf/Angular_full_color_logo.svg)  
+<img src="https://upload.wikimedia.org/wikipedia/commons/c/cf/Angular_full_color_logo.svg" width="100">
 Angular 9.1.6
 
-![Ionic](https://upload.wikimedia.org/wikipedia/commons/d/d1/Ionic_Logo.svg)  
+<img src="https://upload.wikimedia.org/wikipedia/commons/d/d1/Ionic_Logo.svg" width="100">
 Ionic 5.0.0
 
-![MySQL](https://upload.wikimedia.org/wikipedia/commons/f/f7/MySQL_logo.svg)  
+<img src="https://upload.wikimedia.org/wikipedia/commons/f/f7/MySQL_logo.svg" width="100">
 MySQL 5.7
 
-![Azure](https://upload.wikimedia.org/wikipedia/commons/a/a8/Microsoft_Azure_Logo.svg)  
+<img src="https://upload.wikimedia.org/wikipedia/commons/a/a8/Microsoft_Azure_Logo.svg" width="100">
 Serviço de Aplicação Azure & Banco de Dados do Azure para MySQL
 
-![Node.js](https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg)  
+<img src="https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg" width="100">
 Node.js versão 9.1.14
 
-![GitHub](https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg)  
+<img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" width="100">
 Versionamento no GitHub
 
-![Firebase](https://upload.wikimedia.org/wikipedia/commons/4/46/Touchicon-180.png)  
+<img src="https://upload.wikimedia.org/wikipedia/commons/4/46/Touchicon-180.png" width="100">
 Angular publicado no Firebase
 
 ## Ambiente de Desenvolvimento
